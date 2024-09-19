@@ -1,0 +1,24 @@
+{
+    "docs": [
+      {
+        "codigo_propriedade":10,  
+        "tipo_proprietario":"Chacara",
+        "itens":[
+              "Cadeiras",
+              "Mesas"
+          ],
+            "data_disponivel": "1990-05-20",
+            "preco": 1000
+      },
+      {
+        "codigo_propriedade":7,  
+        "tipo_proprietario":"Salão",
+        "itens":[
+              "Piscina",
+              "Churrasqueira"
+          ],
+            "data_disponivel": "2024-10-25",
+            "preco": 2000
+      }
+    ]
+  }

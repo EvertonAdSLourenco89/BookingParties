@@ -1,0 +1,44 @@
+@counchdb = http://Admin:30115982Aib@127.0.0.1:5984
+@propriedades = http://Admin:30115982Aib@127.0.0.1:5984/propriedades
+### criando banco de dados contatos
+PUT {{counchdb}}/propriedades
+
+### inserir documento atráves da requisição para incluir em lote
+POST {{counchdb}}/propriedades/_bulk_docs
+Content-Type: application/json
+
+< ./propriedades.json
+
+### acrescentando no banco um contato tem que colocar o id depois da barra /
+PUT {{propriedades}}
+Content-Type: application/json
+
+{
+         {
+        "codigo_propriedade":7,  
+        "tipo_proprietario":"Salão",
+        "itens":[
+              "Piscina",
+              "Churrasqueira"
+          ],
+            "data_disponivel": "2024-10-25",
+            "preco": 2000
+      }
+}
+
+### 
+PUT {{propriedades}}
+Content-Type: application/json
+
+{
+          {
+        "codigo_propriedade":20,  
+        "tipo_proprietario":"sala",
+        "itens":[
+              "Cadeiras",
+              "Mesas"
+          ],
+            "data_disponivel": "1990-05-20",
+            "preco": 1000
+      }
+}

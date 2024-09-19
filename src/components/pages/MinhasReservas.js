@@ -1,74 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import axios from 'axios';
 
 const ListaReservas = () => {
+  const [reservas, setReservas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5984/reservas/_all_docs?include_docs=true', {
+          auth: {
+            username: 'Admin',
+            password: '30115982Aib'
+          }
+        });
+        const docs = response.data.rows.map(row => row.doc);  // Obtenha os documentos
+        setReservas(docs);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro ao carregar dados: {error}</p>;
+
   return (
     <div className="home-container">
       <Header />
+      
       <div className="home-content">
-        <h1>Booking Parties</h1>
-        <p>Lista reservas.</p>
+        <h1>Aqui estão suas reservas.</h1>
+        <div className="login-container">
+     <form  className="login-form">
+       <div className="form-group">
+         
+       </div>
+       <div className="form-group">
+       <ul className="home-container">
+          {reservas.map((reservas) => (
+              <li key={reservas._id}>
+             <h2>Código da reserva: {reservas.codigo_reserva}</h2>
+              <p>Código da Local: {reservas.codigo_propriedade}</p>
+              <p>Tipo: {reservas.tipo_proprietario}</p>
+              <p>Nome Completo: {reservas.nome_completo}</p>
+              <p>E-mail: {reservas.email}</p>
+              <p>Telefone: {reservas.telefone}</p>
+              <p>Endereço: {reservas.endereco}</p>
+              <p>CPF: {reservas.cpf}</p>
+              <p>Data da Reserva: {reservas.data_disponivel}</p>
+              <p>Forma de pagamento: {reservas.forma_pagamento}</p>
+              <p>Parcela: {reservas.parcela}</p>
+              <ul>
+                {reservas.itens && reservas.itens.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+              <br />
+              <button type="submit" className="login-btn">Cancelar</button>
+        <br />
+            </li>
+          ))}
+        </ul>
+         
+       </div>
+       
+     </form>
+     </div>
+        
       </div>
-      <div>
-        <form action="/agendar-consulta" method="POST">
-          <div className="login-container">
-            <h2>Cadastro de Reserva</h2>
-
-            <div className="form-group">
-              <label htmlFor="codigoReserva">Código da Reserva</label>
-              <input  required/>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="codigoPropriedade">Código do Local</label>
-              <input required />
-            </div>
-
-            {/* Dados pessoais do cliente */}
-            <h3>Dados Pessoais</h3>
-            <div className="form-group">
-              <label htmlFor="nomeCliente">Nome Completo</label>
-              <input type="text" id="nomeCliente" name="nomeCliente" required />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="emailCliente">Email</label>
-              <input type="email" id="emailCliente" name="emailCliente" required />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="telefoneCliente">Telefone</label>
-              <input type="tel" id="telefoneCliente" name="telefoneCliente" required />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="enderecoCliente">Endereço</label>
-              <input type="text" id="enderecoCliente" name="enderecoCliente" required />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="cpfCliente">CPF</label>
-              <input type="text" id="cpfCliente" name="cpfCliente" required />
-            </div>
-
-            {/* Dados da reserva */}
-            <div className="form-group">
-              <label htmlFor="date">Data Disponível</label>
-              <input type="date" id="date" name="date" required />
-            </div>
-
-            {/* Formas de pagamento */}
-            <h3>Status de Pagamento</h3>
-            <div className="form-group">
-              <label htmlFor="pagamento">Pago</label>
-            </div>
-
-
-            <button type="submit">Reservar</button>
-          </div>
-        </form>
-      </div>
+      
       <Footer />
     </div>
   );

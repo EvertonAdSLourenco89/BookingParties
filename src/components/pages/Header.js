@@ -30,7 +30,6 @@ const Header = () => {
                         <>
                         <li><Link to="/proprietario">Home</Link></li>
                             <li><Link to="/cadastrodepropriedade">Cadastro de Propriedades</Link></li>
-                            <li><Link to="/gerenciarpropriedade">Gerenciar Propriedades</Link></li>
                             <li><Link to="/minhasreservas">Gerenciar Reservas</Link></li>
                         </>
                     )}

@@ -1,0 +1,30 @@
+@counchdb = http://Admin:30115982Aib@127.0.0.1:5984
+@reservas = http://Admin:30115982Aib@127.0.0.1:5984/reservas
+### criando banco de dados contatos
+PUT   {{counchdb}}/reservas
+
+### inserir documento atráves da requisição para incluir em lote
+POST  {{counchdb}}/reservas/_bulk_docs
+Content-Type: application/json
+
+< ./reserva.json
+
+###
+PUT {{reservas}}
+Content-Type: application/json
+
+{
+    {
+        "codigo_propriedade":154,
+        "codigo_reserva":45,
+        "tipo_proprietario":"SALÃO",
+        "nome_completo":"Caio",
+        "email": "caio@.com",
+        "telefone": "016 99165-7788",
+        "endereco": "Rua das Plantas, 30 - Jardim Bosque",
+        "cpf": "222.177.785.14",
+        "data_disponivel": "2024-10-10",
+        "forma_pagamento":"Cartão",
+        "parcela":"a vista"
+    }
+}
