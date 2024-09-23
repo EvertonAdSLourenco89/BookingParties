@@ -14,31 +14,29 @@ PUT {{propriedades}}
 Content-Type: application/json
 
 {
-         {
-        "codigo_propriedade":7,  
-        "tipo_proprietario":"Salão",
+        "codigo_propriedade":20,  
+        "tipo_propriedade":"Salão",
         "itens":[
               "Piscina",
               "Churrasqueira"
           ],
             "data_disponivel": "2024-10-25",
             "preco": 2000
-      }
 }
 
-### 
-PUT {{propriedades}}
+### editando
+PUT {{propriedades}}/5?rev=1-63ff401084ca239057f21b469bae00ef
 Content-Type: application/json
 
-{
-          {
-        "codigo_propriedade":20,  
-        "tipo_proprietario":"sala",
+{   
+        "codigo_propriedade":32,  
+        "tipo_propriedade":"casa de campo",
         "itens":[
               "Cadeiras",
               "Mesas"
           ],
-            "data_disponivel": "1990-05-20",
+            "data_disponivel": "2024-09-11",
             "preco": 1000
-      }
 }
+###
+get couchdb/_design/propriedades/_view/codigoPropriedade

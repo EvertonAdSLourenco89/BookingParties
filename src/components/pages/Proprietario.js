@@ -43,9 +43,10 @@ const ListaPropriedades = () => {
   }, []); // O array vazio significa que essa função será chamada apenas uma vez, ao montar o componente
 
   // Função para redirecionar para a página de gerenciamento de propriedade
-  const handleEditClick = (id) => {
-    navigate(`/gerenciar-propriedade/${id}`); // Redireciona para a página de gerenciamento de propriedade com o ID da propriedade
+  const handleEditClick = (codigo_propriedade) => {
+    navigate(`/GerenciarPropriedade/${codigo_propriedade}`, { state: { codigoPropriedade: codigo_propriedade } });
   };
+  
 
   // Exibe o estado de carregamento
   if (loading) return <p>Carregando...</p>;
@@ -88,7 +89,7 @@ const ListaPropriedades = () => {
                     <button 
                       type="button" 
                       className="login-btn"
-                      onClick={() => handleEditClick(propriedade._id)} // Chama a função de redirecionamento
+                      onClick={() => handleEditClick(propriedade.codigo_propriedade)} // Chama a função de redirecionamento
                     >
                       Editar
                     </button>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -13,13 +13,12 @@ const CadastroDePropriedade = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  const navigate = useNavigate(); // Inicializa o hook para navegação
+  const navigate = useNavigate();
 
   // Função para gerar um número aleatório único
   const gerarCodigoUnico = () => {
     const randomPart = Math.floor(Math.random() * 10000); // Número aleatório entre 0 e 9999
-    const timestamp = Date.now(); // Timestamp atual
-    return `${randomPart}-${timestamp}`; // Combinação do número e do timestamp
+    return `${randomPart}`; // Retorna apenas o número aleatório
   };
 
   // Gera o código quando o componente for montado
@@ -28,22 +27,36 @@ const CadastroDePropriedade = () => {
     setCodigoPropriedade(codigo);
   }, []);
 
+  // Função para salvar o código em um arquivo de texto
+  const salvarCodigoEmTxt = (codigo) => {
+    const element = document.createElement('a');
+    const file = new Blob([`Código da Propriedade: ${codigo}`], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = 'codigo_propriedade.txt';
+    document.body.appendChild(element); // Adiciona o elemento temporariamente ao DOM
+    element.click();
+    document.body.removeChild(element); // Remove o elemento após o clique
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Criação do objeto JSON com os dados do formulário
+    // Transformando os itens inclusos em array
+    const itensArray = itensInclusos.split(',').map(item => item.trim());
+
+    // Criando o objeto de propriedade
     const propriedadeData = {
-      codigoPropriedade,
-      preco,
-      tipoPropriedade,
-      itensInclusos,
-      dataDisponivel,
+      codigo_propriedade: codigoPropriedade, // Código gerado automaticamente
+      tipo_propriedade: tipoPropriedade,
+      itens: itensArray,
+      data_disponivel: dataDisponivel,
+      preco: parseFloat(preco)
     };
 
     try {
       setLoading(true);
 
-      // Enviando os dados em formato JSON para o CouchDB
+      // Requisição POST para criar um novo documento no CouchDB
       await axios.post('http://localhost:5984/propriedades', propriedadeData, {
         headers: {
           'Content-Type': 'application/json',
@@ -54,9 +67,10 @@ const CadastroDePropriedade = () => {
       setLoading(false);
       alert('Propriedade cadastrada com sucesso!');
 
-      // Redireciona para a tela de proprietários
+      // Salvar o código da propriedade em um arquivo de texto
+      salvarCodigoEmTxt(codigoPropriedade);
+
       navigate('/proprietario');
-      
     } catch (err) {
       setLoading(false);
       setError(err.message);
@@ -83,7 +97,7 @@ const CadastroDePropriedade = () => {
                 id="codigoPropriedade"
                 name="codigoPropriedade"
                 value={codigoPropriedade}
-                readOnly
+                readOnly // Campo não editável
                 required
               />
             </div>
@@ -97,9 +111,10 @@ const CadastroDePropriedade = () => {
                 onChange={(e) => setTipoPropriedade(e.target.value)}
                 required
               >
-                <option value="chacara">Chácara</option>
-                <option value="salao">Salão</option>
-                <option value="areaDeLazer">Área de Lazer</option>
+                <option value="chacara">Chacara</option>
+                <option value="salao">Salao</option>
+                <option value="areaDeLazer">Area de Lazer</option>
+                <option value="sala">Sala</option>
               </select>
             </div>
 
@@ -124,6 +139,7 @@ const CadastroDePropriedade = () => {
                 value={itensInclusos}
                 onChange={(e) => setItensInclusos(e.target.value)}
                 required
+                placeholder="Ex: Cadeiras, Mesas"
               ></textarea>
             </div>
 
@@ -139,7 +155,9 @@ const CadastroDePropriedade = () => {
               />
             </div>
 
-            <button type="submit" disabled={loading}>
+            <button type="submit" 
+            className="login-btn"
+            disabled={loading}>
               {loading ? 'Cadastrando...' : 'Cadastrar Propriedade'}
             </button>
             {error && <p>Erro: {error}</p>}

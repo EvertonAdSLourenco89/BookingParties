@@ -30,7 +30,10 @@ const Header = () => {
                         <>
                         <li><Link to="/proprietario">Home</Link></li>
                             <li><Link to="/cadastrodepropriedade">Cadastro de Propriedades</Link></li>
-                            <li><Link to="/minhasreservas">Gerenciar Reservas</Link></li>
+                            <li><Link to="/reservasProprietario">Gerenciar Reservas</Link></li>
+                            <li><Link to="/gerenciarPropriedade">Gerenciar propriedade</Link></li>
+                            <li><Link to="/teste">teste</Link></li>
+
                         </>
                     )}
                     {role === 'cliente' && (
@@ -38,6 +41,7 @@ const Header = () => {
                         <li><Link to="/cliente">Home</Link></li>
                             <li><Link to="/minhasreservas">Minhas reservas</Link></li>
                             <li><Link to="/cadastroreserva">Fazer reserva</Link></li>
+                            <li><Link to="/teste">teste</Link></li>
                         </>
                     )}
                     <li><a href="/login" className="logout-link" onClick={handleLogout}>Sair</a></li>

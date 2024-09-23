@@ -1,7 +1,7 @@
 {
     "docs": [
       {
-        "codigo_propriedade":10,
+        "codigo_propriedade":3480,
         "codigo_reserva":10,
         "tipo_proprietario":"Chacara",
         "nome_completo":"Everton Santos",
@@ -14,7 +14,7 @@
         "parcela":"a vista"
       },
       {
-        "codigo_propriedade":154,
+        "codigo_propriedade":4468,
         "codigo_reserva":45,
         "tipo_proprietario":"SALÃO",
         "nome_completo":"Caio",

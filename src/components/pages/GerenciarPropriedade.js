@@ -1,173 +1,207 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 
-const GerenciarPropriedade = () => {
+const EditarPropriedade = () => {
   const [codigoPropriedade, setCodigoPropriedade] = useState('');
-  const [dadosPropriedade, setDadosPropriedade] = useState({
-    codigo: '',
-    tipoPropriedade: '',
-    itensInclusos: '',
-    dataDisponivel: '',
-    image: null
-  });
+  const [tipoPropriedade, setTipoPropriedade] = useState('');
+  const [preco, setPreco] = useState('');
+  const [itensInclusos, setItensInclusos] = useState('');
+  const [dataDisponivel, setDataDisponivel] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [propriedade, setPropriedade] = useState(null); // Objeto completo da propriedade
+  
+  const navigate = useNavigate();
 
-  const [erro, setErro] = useState('');
-
-  // Função para buscar os dados da propriedade
-  const buscarPropriedade = async (e) => {
-    e.preventDefault();
+  // Função para buscar os dados da propriedade pelo código usando _find
+  const buscarPropriedade = async () => {
     try {
-      const response = await fetch(`/api/propriedades/${codigoPropriedade}`);
-  
-      // Verifique se o status da resposta é OK (200-299)
-      if (!response.ok) {
-        throw new Error(`Erro: ${response.status} - ${response.statusText}`);
-      }
-  
-      // Verifique o tipo de conteúdo retornado
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Resposta não é um JSON válido');
-      }
-  
-      // Converte a resposta para JSON
-      const data = await response.json();
-      
-      setDadosPropriedade({
-        codigo: data.codigo,
-        tipoPropriedade: data.tipoPropriedade,
-        itensInclusos: data.itensInclusos,
-        dataDisponivel: data.dataDisponivel,
-        image: data.image
+      setLoading(true);
+      const response = await axios.post(`http://localhost:5984/propriedades/_find`, {
+        selector: { codigo_propriedade: codigoPropriedade }
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
+        }
       });
+
+      if (response.data.docs.length > 0) {
+        const propriedadeData = response.data.docs[0];  // Propriedade encontrada
+        setPropriedade(propriedadeData); // Armazena a propriedade completa
+        setTipoPropriedade(propriedadeData.tipo_proprietario);
+        setPreco(propriedadeData.preco);
+        setItensInclusos(propriedadeData.itens.join(', '));
+        setDataDisponivel(propriedadeData.data_disponivel);
+      } else {
+        alert('Propriedade não encontrada');
+        setPropriedade(null);
+      }
+      setLoading(false);
     } catch (err) {
-      setErro(err.message);
+      setLoading(false);
+      setError(err.message);
     }
   };
-  
 
-  // Atualizar os campos com os dados da propriedade quando for buscado
-  useEffect(() => {
-    if (dadosPropriedade.codigo) {
-      setCodigoPropriedade(dadosPropriedade.codigo);
+  // Função para atualizar os dados da propriedade
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
+    const itensArray = itensInclusos.split(',').map(item => item.trim());
+
+    const propriedadeDataAtualizada = {
+      ...propriedade, // Manteve os dados originais
+      tipo_proprietario: tipoPropriedade,
+      itens: itensArray,
+      data_disponivel: dataDisponivel,
+      preco: parseFloat(preco),
+    };
+
+    try {
+      setLoading(true);
+      await axios.put(`http://localhost:5984/propriedades/${propriedade._id}`, propriedadeDataAtualizada, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('Admin:30115982Aib')
+        },
+        params: { rev: propriedade._rev } // CouchDB exige o _rev para atualizações
+      });
+
+      setLoading(false);
+      alert('Propriedade atualizada com sucesso!');
+      navigate('/proprietario');
+    } catch (err) {
+      setLoading(false);
+      setError(err.message);
     }
-  }, [dadosPropriedade]);
+  };
+
+  // Função para excluir a propriedade
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await axios.delete(`http://localhost:5984/propriedades/${propriedade._id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
+        },
+        params: { rev: propriedade._rev } // CouchDB exige o _rev para exclusão
+      });
+
+      setLoading(false);
+      alert('Propriedade excluída com sucesso!');
+      navigate('/proprietario');
+    } catch (err) {
+      setLoading(false);
+      setError(err.message);
+    }
+  };
 
   return (
     <div className="home-container">
       <Header />
       <div className="home-content">
-        <h1>Booking Parties</h1>
-        <p>Aqui você pode editar sua propriedade.</p>
+        <h1>Editar Propriedade</h1>
+        <p>Digite o código da propriedade que deseja editar.</p>
       </div>
 
       <div>
-        {/* Primeiro formulário: Buscar a propriedade pelo código */}
-        <form onSubmit={buscarPropriedade}>
+        <form onSubmit={handleUpdate}>
           <div className="login-container">
-            <div className="form-group">
-              <h2>Código da Propriedade</h2>
-              <input
-                type="text"
-                value={codigoPropriedade}
-                onChange={(e) => setCodigoPropriedade(e.target.value)}
-                required
-              />
-            </div>
-
-            <br />
-            <button type="submit" className="login-btn">Editar</button>
-            <br />
-            {erro && <p style={{ color: 'red' }}>{erro}</p>}
-          </div>
-        </form>
-
-        {/* Segundo formulário: Edição dos dados da propriedade */}
-        <form>
-          <div className="login-container">
-            <h2>Edição de Propriedade</h2>
+            <h2>Editar Propriedade</h2>
 
             <div className="form-group">
               <label htmlFor="codigoPropriedade">Código da Propriedade</label>
               <input
                 type="text"
-                value={dadosPropriedade.codigo}
-                readOnly
+                id="codigoPropriedade"
+                name="codigoPropriedade"
+                value={codigoPropriedade}
+                onChange={(e) => setCodigoPropriedade(e.target.value)}
                 required
-              />
+              /><br></br>
+              <br></br>
+              <button type="button" 
+              className="login-btn"
+              onClick={buscarPropriedade} disabled={loading}>
+                {loading ? 'Buscando...' : 'Buscar Propriedade'}
+              </button>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="tipoPropriedade">Tipo de Propriedade</label>
-              <select
-                id="tipoPropriedade"
-                name="tipoPropriedade"
-                value={dadosPropriedade.tipoPropriedade}
-                onChange={(e) =>
-                  setDadosPropriedade({
-                    ...dadosPropriedade,
-                    tipoPropriedade: e.target.value
-                  })
-                }
-                required
-              >
-                <option value="chacara">Chácara</option>
-                <option value="salao">Salão</option>
-                <option value="areaDeLazer">Área de Lazer</option>
-              </select>
-            </div>
+            {propriedade && (
+              <>
+                <div className="form-group">
+                  <label htmlFor="tipoPropriedade">Tipo de Propriedade</label>
+                  <select
+                    id="tipoPropriedade"
+                    name="tipoPropriedade"
+                    value={tipoPropriedade}
+                    onChange={(e) => setTipoPropriedade(e.target.value)}
+                    required
+                  >
+                    <option value="chacara">Chacara</option>
+                    <option value="salao">Salao</option>
+                    <option value="areaDeLazer">Area de Lazer</option>
+                    <option value="sala">Sala</option>
+                  </select>
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="itensInclusos">Itens Inclusos</label>
-              <textarea
-                id="itensInclusos"
-                name="itensInclusos"
-                rows="4"
-                value={dadosPropriedade.itensInclusos}
-                onChange={(e) =>
-                  setDadosPropriedade({
-                    ...dadosPropriedade,
-                    itensInclusos: e.target.value
-                  })
-                }
-                required
-              ></textarea>
-            </div>
+                <div className="form-group">
+                  <label htmlFor="preco">Preço</label>
+                  <input
+                    type="text"
+                    id="preco"
+                    name="preco"
+                    value={preco}
+                    onChange={(e) => setPreco(e.target.value)}
+                    required
+                  />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="date">Data Disponível</label>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                value={dadosPropriedade.dataDisponivel}
-                onChange={(e) =>
-                  setDadosPropriedade({
-                    ...dadosPropriedade,
-                    dataDisponivel: e.target.value
-                  })
-                }
-                required
-              />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="itensInclusos">Itens Inclusos</label>
+                  <textarea
+                    id="itensInclusos"
+                    name="itensInclusos"
+                    rows="4"
+                    value={itensInclusos}
+                    onChange={(e) => setItensInclusos(e.target.value)}
+                    required
+                    placeholder="Ex: Cadeiras, Mesas"
+                  ></textarea>
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="image">Imagens da Propriedade</label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                onChange={(e) =>
-                  setDadosPropriedade({
-                    ...dadosPropriedade,
-                    image: e.target.files[0]
-                  })
-                }
-              />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="date">Data Disponível</label>
+                  <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value={dataDisponivel}
+                    onChange={(e) => setDataDisponivel(e.target.value)}
+                    required
+                  />
+                </div>
 
-            <button type="submit">Atualizar Propriedade</button>
+                <button 
+                className="login-btn"
+                type="submit" disabled={loading}>
+                  {loading ? 'Atualizando...' : 'Atualizar Propriedade'}
+                </button ><br></br>
+                <br></br>
+                <button type="button"
+                className="cancel-btn"
+                onClick={handleDelete} disabled={loading}>
+                  {loading ? 'Excluindo...' : 'Excluir Propriedade'}
+                </button>
+
+                {error && <p>Erro: {error}</p>}
+              </>
+            )}
           </div>
         </form>
       </div>
@@ -176,6 +210,4 @@ const GerenciarPropriedade = () => {
   );
 };
 
-export default GerenciarPropriedade;
-
-
+export default EditarPropriedade;

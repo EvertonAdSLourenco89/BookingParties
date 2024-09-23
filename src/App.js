@@ -11,6 +11,9 @@ import GerenciarPropriedade from './components/pages/GerenciarPropriedade';
 import CadastroReserva from './components/pages/CadastroReserva';
 import MinhasReservas from'./components/pages/MinhasReservas';
 import ListaPropriedades from './components/pages/ListaPropriedades';
+import ReservasProprietario from './components/pages/ReservasProprietario';
+import Teste from './components/pages/Teste'
+
 
 
 
@@ -29,6 +32,8 @@ function App() {
         <Route path="/minhasreservas" element={<MinhasReservas/>} />
         <Route path="/listapropriedades" element={<ListaPropriedades/>} />
         <Route path="/cadastroreserva" element={<CadastroReserva/>} />
+        <Route path="/teste" element={<Teste/>} />
+        <Route path="/reservasProprietario" element={<ReservasProprietario/>} />
       </Routes>
     </Router>
   );
