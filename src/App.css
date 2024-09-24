@@ -4,18 +4,27 @@
   text-align: center;
   padding: 20px;
 }
+.home-header .right-text{
+  margin-right: auto;
+  color:white;
+}
+
+.left-text{
+  margin-right: auto;
+  color:white;
+  display: flex;
+  align-items:baseline;
+}
 
 .home-header {
   background-color: #2e0fb5;
   color: white;
   padding: 20px;
-  display: flex;
-  /* Torna o header um contêiner flexível */
-  justify-content: space-between;
-  /* Espaça os itens */
-  align-items: center;
-  /* Alinha verticalmente os itens */
+  display: flex; /* Torna o header um contêiner flexível */
+  justify-content: space-between; /* Espaça os itens */
+  align-items: center; /* Alinha verticalmente os itens */
 }
+
 
 .home1-header {
   background-color: #2e0fb5;
@@ -144,6 +153,11 @@ h2 {
   border-radius: 5px;
   cursor: pointer;
 }
+.login2-btn {
+  color: white;             
+  font-size: 16px;  
+}
+
 .cancel-btn {
   background-color: #b50f0f;
   color: white;
@@ -162,4 +176,77 @@ h2 {
   color: red;
   margin-top: 10px;
   font-size: 14px;
+}
+
+.home2-container {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os campos fiquem lado a lado */
+  gap: 20px; /* Espaçamento entre os campos */
+  border: 2px solid yellow; /* Borda amarela ao redor do formulário */
+  padding: 20px; /* Adiciona espaçamento interno */
+  border-radius: 5px; /* Arredonda os cantos da borda */
+}
+
+/* CSS para estilizar a imagem das propriedades */
+.property-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.property-image-container img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção */
+  border-radius: 10px; /* Bordas arredondadas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidade */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animação suave */
+}
+
+.property-image-container img:hover {
+  transform: scale(1.05); /* Efeito de zoom suave ao passar o mouse */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Aumenta a sombra ao passar o mouse */
+}
+
+/* Texto da imagem */
+.property-image-title {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Define o layout de grade para as imagens */
+.property-image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Exibe duas imagens por linha */
+  grid-gap: 10px; /* Espaçamento entre as imagens */
+  margin-top: 20px; /* Margem entre as imagens e o conteúdo acima */
+}
+
+/* Estilização individual das imagens */
+.property-image {
+  width: 100%; /* Ocupar toda a largura da célula da grade */
+  height: 120px; /* Altura consistente para todas as imagens */
+  object-fit: cover; /* Garante que a imagem seja recortada corretamente */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para destaque */
+  transition: transform 0.3s ease; /* Transição suave ao passar o mouse */
+}
+
+/* Efeito hover para um visual mais interativo */
+.property-image:hover {
+  transform: scale(1.05); /* Aumenta levemente a imagem ao passar o mouse */
+}
+
+/* Centraliza o formulário e limita sua largura */
+form.login-form {
+  max-width: 800px; /* Limita a largura do formulário */
+  margin: 0 auto; /* Centraliza o formulário */
+  padding: 20px;
+  background-color: #f9f9f9; /* Fundo leve para contraste */
+  border-radius: 12px; /* Bordas arredondadas para visual moderno */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
 }

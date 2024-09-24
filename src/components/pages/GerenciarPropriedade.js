@@ -10,9 +10,20 @@ const EditarPropriedade = () => {
   const [preco, setPreco] = useState('');
   const [itensInclusos, setItensInclusos] = useState('');
   const [dataDisponivel, setDataDisponivel] = useState('');
+  const [dataFinal, setDataFinal] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [propriedade, setPropriedade] = useState(null); // Objeto completo da propriedade
+  const [imagem, setImagem] = useState(null); // Estado para a imagem
+  const [imagemPreview, setImagemPreview] = useState(null); // URL da imagem para preview
+  
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImagem(file); // Armazena a imagem
+      setImagemPreview(URL.createObjectURL(file)); // Gera o preview
+    }
+  };
   
   const navigate = useNavigate();
 
@@ -177,6 +188,30 @@ const EditarPropriedade = () => {
                     value={dataDisponivel}
                     onChange={(e) => setDataDisponivel(e.target.value)}
                     required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="dataFinal">Data Final</label>
+                  <input
+                    type="date"
+                    id="dataFinal"
+                    name="dataFinal"
+                    value={dataFinal}
+                    onChange={(e) => setDataFinal(e.target.value)}
+                    required
+                    //min={new Date().toISOString().split("T")[0]}
+                  />
+                </div>
+
+                {/* Campo para upload da imagem */}
+                <div className="form-group">
+                  <label htmlFor="imagem">Imagem da Propriedade</label>
+                  <input
+                    type="file"
+                    id="imagem"
+                    name="imagem"
+                    accept="image/*"
+                    onChange={handleImageChange}
                   />
                 </div>
 

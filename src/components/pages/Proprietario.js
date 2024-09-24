@@ -10,6 +10,21 @@ const ListaPropriedades = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Lista de imagens disponíveis na pasta public/images
+  const imagensDisponiveis = [
+    'imagens (1).jpg',
+    'imagens (2).jpg',
+    'imagens (3).jpg',
+    'imagens (4).jpg',
+    'imagens (5).jpg',
+    'imagens (6).jpg',
+    'imagens (7).jpg',
+    'imagens (8).jpg',
+    'imagens (9).jpg',
+    // Adicione mais imagens conforme necessário
+  ];
+
+  // Função para buscar propriedades do banco de dados
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -19,8 +34,12 @@ const ListaPropriedades = () => {
           password: '30115982Aib',
         },
       });
-      const docs = response.data.rows.map(row => row.doc);
-      
+
+      const docs = response.data.rows.map(row => ({
+        ...row.doc,
+        imagensAleatorias: Array.from({ length: 4 }, () => imagensDisponiveis[Math.floor(Math.random() * imagensDisponiveis.length)]) // Atribui 4 imagens aleatórias
+      }));
+
       setPropriedades(docs);
       setLoading(false);
     } catch (err) {
@@ -33,19 +52,21 @@ const ListaPropriedades = () => {
     fetchData();
   }, []);
 
+  // Função para redirecionar para a página de editar propriedade
   const handleEditClick = (codigo_propriedade) => {
     localStorage.setItem('codigo_propriedade', codigo_propriedade);
     navigate('/GerenciarPropriedade');
   };
 
+  // Função para redirecionar para a página de cadastro de propriedade
   const handleCadastrarPropriedade = () => {
     navigate('/cadastrodepropriedade');
   };
 
+  // Função para deletar propriedade
   const handleDelete = async (propriedade) => {
     try {
       setLoading(true);
-      
       if (!propriedade._id || !propriedade._rev) {
         throw new Error('ID ou REV da propriedade não encontrados');
       }
@@ -70,6 +91,7 @@ const ListaPropriedades = () => {
     }
   };
 
+  // Função para formatar a data no formato dd/mm/yyyy
   const formatarData = (dataString) => {
     const data = new Date(dataString);
     const dia = String(data.getDate()).padStart(2, '0');
@@ -105,10 +127,12 @@ const ListaPropriedades = () => {
                   {propriedades.map((propriedade) => (
                     <li key={propriedade._id}>
                       <h2>Código do Local: {propriedade.codigo_propriedade}</h2>
-                      <p>Tipo: {propriedade.tipo_proprietario}</p>
+                      <p>Tipo: {propriedade.tipo_propriedade}</p>
                       <p>Preço: R$ {propriedade.preco}</p>
-                      <p>Data disponível: {formatarData(propriedade.data_disponivel)}</p>
-                      <p>Itens disponíveis:</p>
+                      <p>Data Disponível: {formatarData(propriedade.data_disponivel)}</p>
+                      <p>Data Limite: {formatarData(propriedade.data_final)}</p>
+                      
+                      <p>Itens Disponíveis:</p>
 
                       {Array.isArray(propriedade.itens) ? (
                         <ul>
@@ -119,6 +143,19 @@ const ListaPropriedades = () => {
                       ) : (
                         <p>{propriedade.itens}</p>
                       )}
+
+                      {/* Exibe 4 imagens aleatórias */}
+                      <div className="property-image-grid">
+                        {propriedade.imagensAleatorias.map((imagem, index) => (
+                          <img
+                            key={index}
+                            src={`/images/${imagem}`}
+                            alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
+                            className="property-image"
+                          />
+                        ))}
+                      </div>
+
                       <br></br>
                       <button 
                         type="button" 

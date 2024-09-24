@@ -13,52 +13,45 @@ const CadastroDePropriedade = () => {
   const [dataFinal, setDataFinal] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [imagem, setImagem] = useState(null); // Estado para a imagem
+  const [imagemPreview, setImagemPreview] = useState(null); // URL da imagem para preview
   
   const navigate = useNavigate();
 
-  // Função para gerar um número aleatório único
   const gerarCodigoUnico = () => {
-    const randomPart = Math.floor(Math.random() * 10000); // Número aleatório entre 0 e 9999
-    return `${randomPart}`; // Retorna apenas o número aleatório
+    const randomPart = Math.floor(Math.random() * 10000);
+    return `${randomPart}`;
   };
 
-  // Gera o código quando o componente for montado
   useEffect(() => {
     const codigo = gerarCodigoUnico();
     setCodigoPropriedade(codigo);
   }, []);
 
-  /*/ Função para salvar o código em um arquivo de texto
-  const salvarCodigoEmTxt = (codigo) => {
-    const element = document.createElement('a');
-    const file = new Blob([`Código da Propriedade: ${codigo}`], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = 'codigo_propriedade.txt';
-    document.body.appendChild(element); // Adiciona o elemento temporariamente ao DOM
-    element.click();
-    document.body.removeChild(element); // Remove o elemento após o clique
-  };*/
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImagem(file); // Armazena a imagem
+      setImagemPreview(URL.createObjectURL(file)); // Gera o preview
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Transformando os itens inclusos em array
     const itensArray = itensInclusos.split(',').map(item => item.trim());
 
-    // Criando o objeto de propriedade
     const propriedadeData = {
-      codigo_propriedade: codigoPropriedade, // Código gerado automaticamente
+      codigo_propriedade: codigoPropriedade,
       tipo_propriedade: tipoPropriedade,
       itens: itensArray,
       data_disponivel: dataDisponivel,
       data_final: dataFinal,
-      preco: parseFloat(preco)
+      preco: parseFloat(preco),
     };
 
     try {
       setLoading(true);
-
-      // Requisição POST para criar um novo documento no CouchDB
       await axios.post('http://localhost:5984/propriedades', propriedadeData, {
         headers: {
           'Content-Type': 'application/json',
@@ -68,10 +61,6 @@ const CadastroDePropriedade = () => {
 
       setLoading(false);
       alert('Propriedade cadastrada com sucesso!');
-
-      // Salvar o código da propriedade em um arquivo de texto
-      //salvarCodigoEmTxt(codigoPropriedade);
-
       navigate('/proprietario');
     } catch (err) {
       setLoading(false);
@@ -99,7 +88,7 @@ const CadastroDePropriedade = () => {
                 id="codigoPropriedade"
                 name="codigoPropriedade"
                 value={codigoPropriedade}
-                readOnly // Campo não editável
+                readOnly
                 required
               />
             </div>
@@ -154,8 +143,8 @@ const CadastroDePropriedade = () => {
                 value={dataDisponivel}
                 onChange={(e) => setDataDisponivel(e.target.value)}
                 required
-                min={new Date().toISOString().split("T")[0]} // Evita datas passadas
-                max={dataFinal} // Define a data máxima
+                min={new Date().toISOString().split("T")[0]}
+                max={dataFinal}
               />
             </div>
 
@@ -168,13 +157,30 @@ const CadastroDePropriedade = () => {
                 value={dataFinal}
                 onChange={(e) => setDataFinal(e.target.value)}
                 required
-                min={new Date().toISOString().split("T")[0]} // Evita datas passadas
+                min={new Date().toISOString().split("T")[0]}
               />
             </div>
 
-            <button type="submit" 
-            className="login-btn"
-            disabled={loading}>
+            {/* Campo para upload da imagem */}
+            <div className="form-group">
+              <label htmlFor="imagem">Imagem da Propriedade</label>
+              <input
+                type="file"
+                id="imagem"
+                name="imagem"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </div>
+
+            {/* Mostrar a imagem de preview se houver */}
+            {imagemPreview && (
+              <div className="form-group">
+                <img src={imagemPreview} alt="Preview da Propriedade" style={{ width: '300px', height: '200px' }} />
+              </div>
+            )}
+
+            <button type="submit" className="login-btn" disabled={loading}>
               {loading ? 'Cadastrando...' : 'Cadastrar Propriedade'}
             </button>
             {error && <p>Erro: {error}</p>}
