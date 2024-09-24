@@ -250,3 +250,11 @@ form.login-form {
   border-radius: 12px; /* Bordas arredondadas para visual moderno */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
 }
+
+.button-container {
+  display: flex;          /* Usando Flexbox para alinhar os botões */
+  gap: 10px;            /* Espaço entre os botões */
+  margin-top: 10px;     /* Margem superior para separar dos elementos acima */
+}
+
+

@@ -11,6 +11,18 @@ const ListaPropriedades = () => {
   const [filtros, setFiltros] = useState({ codigo: '', tipo: '', preco: '', data: '' }); // Estado para armazenar os filtros de busca
   const navigate = useNavigate(); // Hook para navegação
 
+  const imagensDisponiveis = [
+    'imagens (1).jpg',
+    'imagens (2).jpg',
+    'imagens (3).jpg',
+    'imagens (4).jpg',
+    'imagens (5).jpg',
+    'imagens (6).jpg',
+    'imagens (7).jpg',
+    'imagens (8).jpg',
+    'imagens (9).jpg',
+  ];
+
   // Função para formatar data no formato yyyy-mm-dd (para comparar com o valor salvo)
   const formatDateToISO = (dateStr) => {
     const [day, month, year] = dateStr.split('/');
@@ -40,28 +52,30 @@ const ListaPropriedades = () => {
       console.log('Resposta do CouchDB:', response.data);
 
       // Obtém os documentos do banco de dados
-      const docs = response.data.rows.map(row => row.doc);
+      const docs = response.data.rows.map(row => ({
+        ...row.doc,
+        imagensAleatorias: Array.from({ length: 4 }, () => imagensDisponiveis[Math.floor(Math.random() * imagensDisponiveis.length)])
+      }));
 
-      // Aplica os filtros, se houver
+      // Aplica os filtros
       const propriedadesFiltradas = docs.filter((propriedade) => {
         const { codigo, tipo, preco, data } = filters;
-        const dataISO = data ? formatDateToISO(data) : ''; // Formata a data de filtro para ISO
+        const dataISO = data ? formatDateToISO(data) : '';
 
         return (
           (!codigo || propriedade.codigo_propriedade.includes(codigo)) &&
           (!tipo || propriedade.tipo_propriedade.includes(tipo)) &&
           (!preco || Number(propriedade.preco) <= Number(preco)) &&
-          (!data || propriedade.data_disponivel === dataISO) // Filtra por data
+          (!data || propriedade.data_disponivel === dataISO)
         );
       });
 
-      setPropriedades(propriedadesFiltradas); // Define o estado com os dados filtrados
-      setLoading(false); // Finaliza o carregamento
+      setPropriedades(propriedadesFiltradas);
     } catch (err) {
-      // Se houver um erro, define o estado de erro e encerra o carregamento
       console.error('Erro ao buscar os dados:', err);
       setError(err.message);
-      setLoading(false);
+    } finally {
+      setLoading(false); // Finaliza o carregamento
     }
   };
 
@@ -103,10 +117,9 @@ const ListaPropriedades = () => {
         <h1>Locais Disponíveis</h1>
 
         {/* Formulário de filtros */}
-        <form className="login-container" onSubmit={handleFilterSubmit}>
-          <div><br></br>
-            <label htmlFor="codigo">Código do Local</label>
-            <br></br>
+        <form className="home2-container" onSubmit={handleFilterSubmit}>
+          <div><br />
+            <label htmlFor="codigo">Código do Local</label><br />
             <input
               type="text"
               id="codigo"
@@ -115,8 +128,8 @@ const ListaPropriedades = () => {
               onChange={handleFilterChange}
             />
           </div>
-          <div><br></br>
-            <label htmlFor="tipo">Tipo de Local<br></br></label>
+          <div><br />
+            <label htmlFor="tipo">Tipo de Local<br /></label>
             <input
               type="text"
               id="tipo"
@@ -125,8 +138,8 @@ const ListaPropriedades = () => {
               onChange={handleFilterChange}
             />
           </div>
-          <div><br></br>
-            <label htmlFor="preco">Preço máximo</label><br></br>
+          <div><br />
+            <label htmlFor="preco">Preço máximo</label><br />
             <input
               type="number"
               id="preco"
@@ -135,8 +148,8 @@ const ListaPropriedades = () => {
               onChange={handleFilterChange}
             />
           </div>
-          <div><br></br>
-            <label htmlFor="data">Data disponível</label><br></br>
+          <div><br />
+            <label htmlFor="data">Data disponível</label><br />
             <input
               type="text"
               id="data"
@@ -147,7 +160,7 @@ const ListaPropriedades = () => {
               pattern="\d{2}/\d{2}/\d{4}" // Validação para dd/mm/yyyy
               title="Formato: dd/mm/yyyy" // Mensagem de erro personalizada
             />
-          </div><br></br>
+          </div><br />
           <button 
             className='login-btn'
             type="submit">Filtrar</button>
@@ -176,21 +189,32 @@ const ListaPropriedades = () => {
                 )}
 
                 <br />
-                <button 
-                  type="button" 
-                  className="login-btn"
-                  onClick={() => handleReservarClick(propriedade.codigo_propriedade)} // Chama a função de redirecionamento
-                >
-                Reservar
-                </button>
                 <br />
+                <div className="property-image-grid">
+                  {propriedade.imagensAleatorias.map((imagem, index) => (
+                    <img
+                      key={index}
+                      src={`/images/${imagem}`}
+                      alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
+                      className="property-image"
+                    />
+                  ))}
+                  <button 
+                    type="button" 
+                    className="login-btn"
+                    onClick={() => handleReservarClick(propriedade.codigo_propriedade)} // Chama a função de redirecionamento
+                  >
+                    Reservar
+                  </button>
+                  <br />
+                </div>
               </li>
             ))}
           </ul>
         </div>
+        
+        <Footer />
       </div>
-      
-      <Footer />
     </div>
   );
 };

@@ -157,20 +157,23 @@ const ListaPropriedades = () => {
                       </div>
 
                       <br></br>
-                      <button 
-                        type="button" 
-                        className="login-btn"
-                        onClick={() => handleEditClick(propriedade.codigo_propriedade)}
-                      >
-                        Editar
-                      </button><br></br><br></br>
-                      <button 
-                        type="button"
-                        className="cancel-btn"
-                        onClick={() => handleDelete(propriedade)} disabled={loading}
-                      >
-                        {loading ? 'Excluindo...' : 'Excluir'}
-                      </button>
+                      <div className="button-container">
+                        <button 
+                            type="button" 
+                            className="login-btn"
+                            onClick={() => handleEditClick(propriedade.codigo_propriedade)}
+                        >
+                            Editar
+                        </button>
+                        <button 
+                            type="button"
+                            className="cancel-btn"
+                            onClick={() => handleDelete(propriedade)} disabled={loading}
+                        >
+                            {loading ? 'Excluindo...' : 'Excluir'}
+                        </button>
+                       </div>
+
                     </li>
                   ))}
                 </ul>
