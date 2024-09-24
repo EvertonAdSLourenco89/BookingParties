@@ -17,6 +17,13 @@ const ListaPropriedades = () => {
     return `${year}-${month}-${day}`;
   };
 
+  // Função para formatar data de yyyy-mm-dd para dd/mm/yyyy
+  const formatDateToDisplay = (dateStr) => {
+    if (!dateStr) return ''; // Caso a data não exista, retorna string vazia
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   // Função para buscar os dados do CouchDB
   const fetchData = async (filters = {}) => {
     setLoading(true); // Inicia o estado de carregamento
@@ -75,9 +82,10 @@ const ListaPropriedades = () => {
     fetchData(filtros); // Chama a função de busca com os filtros preenchidos
   };
 
-  // Função para redirecionar para a página de gerenciamento de propriedade
-  const handleEditClick = (codigo_propriedade) => {
-    navigate(`/GerenciarPropriedade/${codigo_propriedade}`, { state: { codigoPropriedade: codigo_propriedade } });
+  // Função para redirecionar para a página de cadastro de reserva
+  const handleReservarClick = (codigo_propriedade) => {
+    // Guarda o código da propriedade e navega para a página de cadastro de reserva
+    navigate(`/cadastroreserva`, { state: { codigoPropriedade: codigo_propriedade } });
   };
 
   // Exibe o estado de carregamento
@@ -92,12 +100,13 @@ const ListaPropriedades = () => {
       <Header />
       
       <div className="home-content">
-        <h1>Locais Disponiveis.</h1>
+        <h1>Locais Disponíveis</h1>
 
         {/* Formulário de filtros */}
         <form className="login-container" onSubmit={handleFilterSubmit}>
-          <div>
-            <label htmlFor="codigo">Código da Propriedade</label>
+          <div><br></br>
+            <label htmlFor="codigo">Código do Local</label>
+            <br></br>
             <input
               type="text"
               id="codigo"
@@ -136,6 +145,7 @@ const ListaPropriedades = () => {
               value={filtros.data}
               onChange={handleFilterChange}
               pattern="\d{2}/\d{2}/\d{4}" // Validação para dd/mm/yyyy
+              title="Formato: dd/mm/yyyy" // Mensagem de erro personalizada
             />
           </div><br></br>
           <button 
@@ -150,7 +160,8 @@ const ListaPropriedades = () => {
                 <h2>Código do Local: {propriedade.codigo_propriedade}</h2>
                 <p>Tipo: {propriedade.tipo_propriedade}</p>
                 <p>Preço: R$ {propriedade.preco}</p>
-                <p>Data disponível: {propriedade.data_disponivel}</p>
+                <p>Data disponível: {formatDateToDisplay(propriedade.data_disponivel)}</p> {/* Formata data_disponivel */}
+                <p>Data Máxima: {formatDateToDisplay(propriedade.data_final)}</p> {/* Formata data_final */}
                 <p>Itens disponíveis:</p>
 
                 {/* Verifica se "itens" é um array e exibe a lista */}
@@ -168,7 +179,7 @@ const ListaPropriedades = () => {
                 <button 
                   type="button" 
                   className="login-btn"
-                  onClick={() => handleEditClick(propriedade.codigo_propriedade)} // Chama a função de redirecionamento
+                  onClick={() => handleReservarClick(propriedade.codigo_propriedade)} // Chama a função de redirecionamento
                 >
                 Reservar
                 </button>

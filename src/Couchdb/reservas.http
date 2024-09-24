@@ -1,7 +1,7 @@
 @counchdb = http://Admin:30115982Aib@127.0.0.1:5984
 @reservas = http://Admin:30115982Aib@127.0.0.1:5984/reservas
 ### criando banco de dados contatos
-PUT   {{counchdb}}/reservas
+PUT  {{counchdb}}/reservas
 
 ### inserir documento atráves da requisição para incluir em lote
 POST  {{counchdb}}/reservas/_bulk_docs

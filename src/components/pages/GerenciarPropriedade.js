@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -16,12 +16,23 @@ const EditarPropriedade = () => {
   
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Recupera o código da propriedade do localStorage
+    const codigo = localStorage.getItem('codigo_propriedade');
+    setCodigoPropriedade(codigo);
+
+    if (codigo) {
+      // Busca os dados da propriedade automaticamente
+      buscarPropriedade(codigo);
+    }
+  }, []);
+
   // Função para buscar os dados da propriedade pelo código usando _find
-  const buscarPropriedade = async () => {
+  const buscarPropriedade = async (codigo) => {
     try {
       setLoading(true);
       const response = await axios.post(`http://localhost:5984/propriedades/_find`, {
-        selector: { codigo_propriedade: codigoPropriedade }
+        selector: { codigo_propriedade: codigo }
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -105,32 +116,14 @@ const EditarPropriedade = () => {
     <div className="home-container">
       <Header />
       <div className="home-content">
-        <h1>Editar Propriedade</h1>
-        <p>Digite o código da propriedade que deseja editar.</p>
+        <h1>Editar sua propriedade</h1>
+        <h1>Código: {codigoPropriedade}</h1>
       </div>
 
       <div>
         <form onSubmit={handleUpdate}>
           <div className="login-container">
             <h2>Editar Propriedade</h2>
-
-            <div className="form-group">
-              <label htmlFor="codigoPropriedade">Código da Propriedade</label>
-              <input
-                type="text"
-                id="codigoPropriedade"
-                name="codigoPropriedade"
-                value={codigoPropriedade}
-                onChange={(e) => setCodigoPropriedade(e.target.value)}
-                required
-              /><br></br>
-              <br></br>
-              <button type="button" 
-              className="login-btn"
-              onClick={buscarPropriedade} disabled={loading}>
-                {loading ? 'Buscando...' : 'Buscar Propriedade'}
-              </button>
-            </div>
 
             {propriedade && (
               <>
@@ -188,14 +181,14 @@ const EditarPropriedade = () => {
                 </div>
 
                 <button 
-                className="login-btn"
-                type="submit" disabled={loading}>
+                  className="login-btn"
+                  type="submit" disabled={loading}>
                   {loading ? 'Atualizando...' : 'Atualizar Propriedade'}
-                </button ><br></br>
+                </button><br></br>
                 <br></br>
                 <button type="button"
-                className="cancel-btn"
-                onClick={handleDelete} disabled={loading}>
+                  className="cancel-btn"
+                  onClick={handleDelete} disabled={loading}>
                   {loading ? 'Excluindo...' : 'Excluir Propriedade'}
                 </button>
 

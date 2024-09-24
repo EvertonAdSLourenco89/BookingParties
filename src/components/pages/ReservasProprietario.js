@@ -10,6 +10,15 @@ const ListaReservas = () => {
   const [loading, setLoading] = useState(false); // Estado de loading para buscar
   const [error, setError] = useState(null); // Estado de erro para exibir mensagem
 
+  // Função para formatar data no formato DD/MM/YYYY
+  const formatarData = (dataString) => {
+    const data = new Date(dataString);
+    const dia = String(data.getDate()).padStart(2, '0'); // Adiciona zero à esquerda se necessário
+    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+    const ano = data.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  };
+
   // Função para buscar todas as reservas
   const buscarReservas = async () => {
     try {
@@ -45,6 +54,29 @@ const ListaReservas = () => {
     buscarReservas();
   }, []);
 
+  const handleCancelar = async (id, rev) => {
+    if (window.confirm('Tem certeza que deseja cancelar esta reserva?')) {
+      try {
+        await axios.delete(`http://localhost:5984/reservas/${id}`, {
+          params: { rev },
+          auth: {
+            username: 'Admin',
+            password: '30115982Aib'
+          }
+        });
+        // Remover a reserva do estado após a exclusão
+        setReservas(prevReservas => prevReservas.filter(reserva => reserva._id !== id));
+  
+        // Limpar o campo de código da propriedade e exibir todas as reservas
+        setCodigoPropriedade('');
+        setReservasFiltradas(reservas.filter(reserva => reserva._id !== id));
+        
+      } catch (err) {
+        setError(`Erro ao cancelar a reserva: ${err.message}`);
+      }
+    }
+  };
+
   return (
     <div className="home-container">
       <Header />
@@ -63,8 +95,8 @@ const ListaReservas = () => {
             /><br></br>
             <br></br>
             <button type="button"
-            className="login-btn"
-            onClick={filtrarReservas} disabled={loading}>
+              className="login-btn"
+              onClick={filtrarReservas} disabled={loading}>
               {loading ? 'Filtrando...' : 'Buscar Reservas'}
             </button>
           </div>
@@ -80,10 +112,15 @@ const ListaReservas = () => {
                     <p>Email: {reserva.email}</p>
                     <p>Telefone: {reserva.telefone}</p>
                     <p>Endereço: {reserva.endereco}</p>
-                    <p>Data da Reserva: {reserva.data_disponivel}</p>
+                    <p>Data da Reserva: {formatarData(reserva.data_disponivel)}</p> {/* Aplicando a formatação aqui */}
+                    <p>Data da Final : {formatarData(reserva.data_final_da_reserva)}</p>
+                    <p>Diarias: {reserva.numero_de_diarias}</p>
+                    <p>Valor total: R$ {reserva.total_a_pagar},00</p>
                     <p>Forma de pagamento: {reserva.forma_pagamento}</p>
                     <br />
-                    <button type="button" className="login-btn">Cancelar</button>
+                    <button type="button" className="cancel-btn"
+                      onClick={() => handleCancelar(reserva._id, reserva._rev)}
+                    >Cancelar</button>
                     <br />
                   </li>
                 ))

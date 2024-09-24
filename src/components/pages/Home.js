@@ -16,8 +16,7 @@ const Home = () => {
                     <Link to="/login" className="login-btn">Entrar</Link>
                 </div>
                 <div className="user-info">
-                    <p>Usuários Administradores podem gerenciar o sistema e visualizar logs de atividades.</p>
-                    <p>Se você é o proprietario você pode cadastrar uma propriedade e gerenciar as reservas.</p>
+                    <p>Se você é o proprietario você pode cadastrar um espaço a ser locado, bem como gerenciar as reservas de cada espaço.</p>
                     <p>Se você é um cliente, você podera consultar locais, fazer e consultar suas reservas</p>
                 </div>
             </div>

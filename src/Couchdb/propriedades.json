@@ -1,24 +1,172 @@
 {
     "docs": [
       {
-        "codigo_propriedade":10,  
-        "tipo_proprietario":"Chacara",
-        "itens":[
-              "Cadeiras",
-              "Mesas"
-          ],
-            "data_disponivel": "1990-05-20",
-            "preco": 1000
+        "codigo_propriedade": 1,
+        "tipo_proprietario": "Chacara",
+        "itens": ["Cadeiras", "Mesas"],
+        "data_disponivel": "1990-05-20",
+        "preco": 1000
       },
       {
-        "codigo_propriedade":7,  
-        "tipo_proprietario":"Salão",
-        "itens":[
-              "Piscina",
-              "Churrasqueira"
-          ],
-            "data_disponivel": "2024-10-25",
-            "preco": 2000
+        "codigo_propriedade": 2,
+        "tipo_proprietari": "Casa",
+        "itens": ["Piscina", "Churrasqueira"],
+        "data_disponivel": "2023-09-15",
+        "preco": 1200
+      },
+      {
+        "codigo_propriedade": 3,
+        "tipo_proprietario": "Apartamento",
+        "itens": ["WiFi", "Ar-condicionado"],
+        "data_disponivel": "2024-01-10",
+        "preco": 800
+      },
+      {
+        "codigo_propriedade": 4,
+        "tipo_proprietario": "Sítio",
+        "itens": ["Cadeiras", "Camas"],
+        "data_disponivel": "2023-12-01",
+        "preco": 1500
+      },
+      {
+        "codigo_propriedade": 5,
+        "tipo_proprietario": "Chacara",
+        "itens": ["Campo de futebol", "Piscina"],
+        "data_disponivel": "2023-11-25",
+        "preco": 2000
+      },
+      {
+        "codigo_propriedade": 6,
+        "tipo_proprietario": "Casa",
+        "itens": ["Ar-condicionado", "Churrasqueira"],
+        "data_disponivel": "2023-10-05",
+        "preco": 900
+      },
+      {
+        "codigo_propriedade": 7,
+        "tipo_proprietario": "Apartamento",
+        "itens": ["WiFi", "TV a cabo"],
+        "data_disponivel": "2024-02-20",
+        "preco": 700
+      },
+      {
+        "codigo_propriedade": 8,
+        "tipo_proprietario": "Sítio",
+        "itens": ["Piscina", "Cadeiras"],
+        "data_disponivel": "2023-11-10",
+        "preco": 1600
+      },
+      {
+        "codigo_propriedade": 9,
+        "tipo_proprietario": "Chacara",
+        "itens": ["Mesas", "Camas"],
+        "data_disponivel": "2024-03-18",
+        "preco": 1300
+      },
+      {
+        "codigo_propriedade": 10,
+        "tipo_proprietario": "Casa",
+        "itens": ["WiFi", "Churrasqueira"],
+        "data_disponivel": "2023-12-10",
+        "preco": 1100
+      },
+      {
+        "codigo_propriedade": 11,
+        "tipo_proprietario": "Apartamento",
+        "itens": ["TV a cabo", "Ar-condicionado"],
+        "data_disponivel": "2024-01-30",
+        "preco": 850
+      },
+      {
+        "codigo_propriedade": 12,
+        "tipo_proprietario": "Sítio",
+        "itens": ["Cadeiras", "Piscina"],
+        "data_disponivel": "2023-09-22",
+        "preco": 1800
+      },
+      {
+        "codigo_propriedade": 13,
+        "tipo_proprietario": "Chacara",
+        "itens": ["Camas", "Mesas"],
+        "data_disponivel": "2023-10-14",
+        "preco": 1400
+      },
+      {
+        "codigo_propriedade": 14,
+        "tipo_proprietario": "Casa",
+        "itens": ["Piscina", "WiFi"],
+        "data_disponivel": "2023-11-08",
+        "preco": 1000
+      },
+      {
+        "codigo_propriedade": 15,
+        "tipo_proprietario": "Apartamento",
+        "itens": ["Ar-condicionado", "TV a cabo"],
+        "data_disponivel": "2024-03-05",
+        "preco": 900
+      },
+      {
+        "codigo_propriedade": 16,
+        "tipo_proprietario": "Sítio",
+        "itens": ["Camas", "Piscina"],
+        "data_disponivel": "2024-02-12",
+        "preco": 1700
+      },
+      {
+        "codigo_propriedade": 17,
+        "tipo_proprietario": "Chacara",
+        "itens": ["Campo de futebol", "Cadeiras"],
+        "data_disponivel": "2023-10-21",
+        "preco": 1900
+      },
+      {
+        "codigo_propriedade": 18,
+        "tipo_proprietario": "Casa",
+        "itens": ["WiFi", "Churrasqueira"],
+        "data_disponivel": "2023-09-30",
+        "preco": 1200
+      },
+      {
+        "codigo_propriedade": 19,
+        "tipo_proprietario": "Apartamento",
+        "itens": ["Piscina", "WiFi"],
+        "data_disponivel": "2024-04-01",
+        "preco": 950
+      },
+      {
+        "codigo_propriedade": 20,
+        "tipo_proprietario": "Sítio",
+        "itens": ["Cadeiras", "Churrasqueira"],
+        "data_disponivel": "2024-03-22",
+        "preco": 1500
+      },
+      {
+        "codigo_propriedade": 21,
+        "tipo_proprietario": "Chacara",
+        "itens": ["Piscina", "Camas"],
+        "data_disponivel": "2024-01-15",
+        "preco": 1800
+      },
+      {
+        "codigo_propriedade": 22,
+        "tipo_proprietario": "Casa",
+        "itens": ["WiFi", "TV a cabo"],
+        "data_disponivel": "2023-12-20",
+        "preco": 1100
+      },
+      {
+        "codigo_propriedade": 23,
+        "tipo_proprietario": "Apartamento",
+        "itens": ["Ar-condicionado", "Cadeiras"],
+        "data_disponivel": "2024-02-28",
+        "preco": 800
+      },
+      {
+        "codigo_propriedade": 24,
+        "tipo_proprietario": "Sítio",
+        "itens": ["Campo de futebol", "Piscina"],
+        "data_disponivel": "2024-04-12",
+        "preco": 2000
       }
     ]
   }

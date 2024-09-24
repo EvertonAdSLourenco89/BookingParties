@@ -10,6 +10,7 @@ const CadastroDePropriedade = () => {
   const [preco, setPreco] = useState('');
   const [itensInclusos, setItensInclusos] = useState('');
   const [dataDisponivel, setDataDisponivel] = useState('');
+  const [dataFinal, setDataFinal] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
@@ -27,7 +28,7 @@ const CadastroDePropriedade = () => {
     setCodigoPropriedade(codigo);
   }, []);
 
-  // Função para salvar o código em um arquivo de texto
+  /*/ Função para salvar o código em um arquivo de texto
   const salvarCodigoEmTxt = (codigo) => {
     const element = document.createElement('a');
     const file = new Blob([`Código da Propriedade: ${codigo}`], { type: 'text/plain' });
@@ -36,7 +37,7 @@ const CadastroDePropriedade = () => {
     document.body.appendChild(element); // Adiciona o elemento temporariamente ao DOM
     element.click();
     document.body.removeChild(element); // Remove o elemento após o clique
-  };
+  };*/
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,6 +51,7 @@ const CadastroDePropriedade = () => {
       tipo_propriedade: tipoPropriedade,
       itens: itensArray,
       data_disponivel: dataDisponivel,
+      data_final: dataFinal,
       preco: parseFloat(preco)
     };
 
@@ -68,7 +70,7 @@ const CadastroDePropriedade = () => {
       alert('Propriedade cadastrada com sucesso!');
 
       // Salvar o código da propriedade em um arquivo de texto
-      salvarCodigoEmTxt(codigoPropriedade);
+      //salvarCodigoEmTxt(codigoPropriedade);
 
       navigate('/proprietario');
     } catch (err) {
@@ -152,6 +154,21 @@ const CadastroDePropriedade = () => {
                 value={dataDisponivel}
                 onChange={(e) => setDataDisponivel(e.target.value)}
                 required
+                min={new Date().toISOString().split("T")[0]} // Evita datas passadas
+                max={dataFinal} // Define a data máxima
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dataFinal">Data Final</label>
+              <input
+                type="date"
+                id="dataFinal"
+                name="dataFinal"
+                value={dataFinal}
+                onChange={(e) => setDataFinal(e.target.value)}
+                required
+                min={new Date().toISOString().split("T")[0]} // Evita datas passadas
               />
             </div>
 

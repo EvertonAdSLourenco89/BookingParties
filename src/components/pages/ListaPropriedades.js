@@ -33,7 +33,7 @@ const ListaPropriedades = () => {
   if (error) return <p>Erro ao carregar dados: {error}</p>;
 
   return (
-    <div className="home-container">
+    <div >
       <Header />
       <div className="home-content">
         <h1>Booking Parties</h1>

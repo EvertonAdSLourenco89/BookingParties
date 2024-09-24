@@ -1,0 +1,8 @@
+{
+    "index": {
+      "fields": ["codigo_propriedade", "data_disponivel"]
+    },
+    "name": "codigoDataIndex",
+    "type": "json"
+  }
+  
