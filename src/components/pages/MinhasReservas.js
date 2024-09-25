@@ -4,6 +4,7 @@ import Footer from './Footer';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom'; // Importa o hook useNavigate e Link
 import jsPDF from 'jspdf'; // Importa jsPDF
+import '../../ListaPropriedades.css'; // Importe o arquivo CSS
 
 const ListaReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -44,31 +45,6 @@ const ListaReservas = () => {
 
     // Conteúdo da reserva
     doc.setFontSize(14);
-    doc.text(` ${reserva.codigo_reserva}`, 10, 30);
-    doc.text(`Nome Completo: ${reserva.nome_completo}`, 10, 40);
-    doc.text(`E-mail: ${reserva.email}`, 10, 50);
-    doc.text(`Telefone: ${reserva.telefone}`, 10, 60);
-    doc.text(`Endereço: ${reserva.endereco}`, 10, 70);
-    doc.text(`CPF: ${reserva.cpf}`, 10, 80);
-    doc.text(`Data da Reserva: ${new Date(reserva.data_disponivel).toLocaleDateString('pt-BR')}`, 10, 90);
-    doc.text(`Data Final: ${new Date(reserva.data_final_da_reserva).toLocaleDateString('pt-BR')}`, 10, 90);
-    doc.text(`Diarias: ${reserva.numero_de_diarias}`, 10, 30);
-    doc.text(`Total: ${reserva.total_a_pagar}`, 10, 70);
-    doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 100);
-
-    // Baixar o PDF
-    doc.save(`Booking Parties - cancelamento_reserva_${reserva.codigo_reserva}.pdf`);
-  };
-
-  const gerarPDFDadosReserva = (reserva) => {
-    const doc = new jsPDF();
-    
-    // Cabeçalho do PDF
-    doc.setFontSize(18);
-    doc.text('Dados da Reserva', 10, 10);
-    
-    // Conteúdo da reserva
-    doc.setFontSize(14);
     doc.text(`Código da Reserva: ${reserva.codigo_reserva}`, 10, 30);
     doc.text(`Nome Completo: ${reserva.nome_completo}`, 10, 40);
     doc.text(`E-mail: ${reserva.email}`, 10, 50);
@@ -76,10 +52,38 @@ const ListaReservas = () => {
     doc.text(`Endereço: ${reserva.endereco}`, 10, 70);
     doc.text(`CPF: ${reserva.cpf}`, 10, 80);
     doc.text(`Data da Reserva: ${new Date(reserva.data_disponivel).toLocaleDateString('pt-BR')}`, 10, 90);
-    doc.text(`Data Final: ${new Date(reserva.data_final_da_reserva).toLocaleDateString('pt-BR')}`, 10, 90);
-    doc.text(`Diarias: ${reserva.numero_de_diarias}`, 10, 30);
-    doc.text(`Total: ${reserva.total_a_pagar}`, 10, 70);
-    doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 100);
+    doc.text(`Data Final: ${new Date(reserva.data_final_da_reserva).toLocaleDateString('pt-BR')}`, 10, 100);
+    doc.text(`Diárias: ${reserva.numero_de_diarias}`, 10, 110);
+    doc.text(`Total: R$ ${reserva.total_a_pagar},00`, 10, 120);
+    doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 130);
+
+    // Baixar o PDF
+    doc.save(`Booking Parties - cancelamento_reserva_${reserva.codigo_reserva}.pdf`);
+  };
+
+  const gerarPDFDadosReserva = (reserva) => {
+    const doc = new jsPDF();
+    const dataHoraAtual = new Date().toLocaleString('pt-BR');
+    
+    // Cabeçalho do PDF
+    doc.setFontSize(18);
+    doc.text('Booking Parties - Comprovante da reserva', 10, 10);
+    doc.setFontSize(12);
+    doc.text(`Data e Hora: ${dataHoraAtual}`, 10, 20);
+    
+    // Conteúdo da reserva
+    doc.setFontSize(14);
+    doc.text(`Código da Reserva: ${reserva.codigo_reserva}`, 20, 30);
+    doc.text(`Nome Completo: ${reserva.nome_completo}`, 10, 40);
+    doc.text(`E-mail: ${reserva.email}`, 10, 50);
+    doc.text(`Telefone: ${reserva.telefone}`, 10, 60);
+    doc.text(`Endereço: ${reserva.endereco}`, 10, 70);
+    doc.text(`CPF: ${reserva.cpf}`, 10, 80);
+    doc.text(`Data da Reserva: ${new Date(reserva.data_disponivel).toLocaleDateString('pt-BR')}`, 10, 90);
+    doc.text(`Data Final: ${new Date(reserva.data_final_da_reserva).toLocaleDateString('pt-BR')}`, 10, 100);
+    doc.text(`Diárias: ${reserva.numero_de_diarias}`, 10, 110);
+    doc.text(`Total: R$ ${reserva.total_a_pagar},00`, 10, 120);
+    doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 130);
 
     // Baixar o PDF
     doc.save(`Dados_Reserva_${reserva.codigo_reserva}.pdf`);
@@ -109,71 +113,65 @@ const ListaReservas = () => {
   if (error) return <p>Erro ao carregar dados: {error}</p>;
 
   return (
-    <div className="home-container">
+    <div className="home-containerprop">
       <Header />
-      
-      <div className="home-content">
+      <div>
         <h1>Aqui estão suas reservas.</h1>
-        <div className="login-container">
-          <form className="login-form">
-            <div className="form-group">
-              {reservas.length === 0 ? (
-                <div>
-                  <p>Não há reservas. Se já sabe o código do local, clique no botão abaixo ou em voltar para consultar locais disponíveis.</p>
-                  <button type="button"
-                  className='login-btn' 
-                  onClick={() => navigate('/cadastroReserva')}>
-                    Fazer uma reserva
-                  </button>
-                  <br />
-                  <Link to="/cliente">Voltar</Link>
-                </div>
-              ) : (
-                <ul className="home-container">
-                  {reservas.map((reserva) => (
-                    <li key={reserva._id}>
-                      <h2>Código da reserva: {reserva.codigo_reserva}</h2>
-                      <p>Código do Local: {reserva.codigo_propriedade}</p>
-                      <p>Nome Completo: {reserva.nome_completo}</p>
-                      <p>E-mail: {reserva.email}</p>
-                      <p>Telefone: {reserva.telefone}</p>
-                      <p>Endereço: {reserva.endereco}</p>
-                      <p>CPF: {reserva.cpf}</p>
-                      <p>Data da Reserva: {new Date(reserva.data_disponivel).toLocaleDateString('pt-BR')}</p>
-                      <p>Data da Final : {new Date(reserva.data_final_da_reserva).toLocaleDateString('pt-BR')}</p>
-                      <p>Diarias: {reserva.numero_de_diarias}</p>
-                      <p>Valor total: R$ {reserva.total_a_pagar},00</p>
-                      <p>Forma de pagamento: {reserva.pagamento}</p>
-                      <ul>
-                        {reserva.itens && reserva.itens.map((item, index) => (
-                          <li key={index}>{item}</li>
-                        ))}
-                      </ul>
-                      <br />
-                      <button
-                        type="button"
-                        className="cancel-btn"
-                        onClick={() => handleCancelar(reserva._id, reserva._rev, reserva)}
-                      >
-                        Cancelar reserva
-                      </button><br></br><br></br>
-                      <button
-                        type="button"
-                        className="login-btn"
-                        onClick={() => gerarPDFDadosReserva(reserva)}
-                      >
-                        Imprimir Dados
-                      </button>
-                      <br />
-                    </li>
-                  ))}
-                </ul>
-              )}
+        <div className="grid-container">
+          {reservas.length === 0 ? (
+            <div>
+              <p>Não há reservas. Se já sabe o código do local, clique no botão abaixo ou em voltar para consultar locais disponíveis.</p>
+              <button type="button" className='login-btn' onClick={() => navigate('/cadastroReserva')}>
+                Fazer uma reserva
+              </button>
+              <br />
+              <Link to="/cliente">Voltar</Link>
             </div>
-          </form>
+          ) : (
+            reservas.map((reserva) => (
+              <div className="card" key={reserva._id}>
+                <div className="card-header">
+                  <h2>Código da Reserva: {reserva.codigo_reserva}</h2>
+                </div>
+                <div className="card-body">
+                  <p><strong>Código do Local:</strong> {reserva.codigo_propriedade}</p>
+                  <p><strong>Nome Completo:</strong> {reserva.nome_completo}</p>
+                  <p><strong>E-mail:</strong> {reserva.email}</p>
+                  <p><strong>Telefone:</strong> {reserva.telefone}</p>
+                  <p><strong>Endereço:</strong> {reserva.endereco}</p>
+                  <p><strong>CPF:</strong> {reserva.cpf}</p>
+                  <p><strong>Data da Reserva:</strong> {new Date(reserva.data_disponivel).toLocaleDateString('pt-BR')}</p>
+                  <p><strong>Data Final:</strong> {new Date(reserva.data_final_da_reserva).toLocaleDateString('pt-BR')}</p>
+                  <p><strong>Diárias:</strong> {reserva.numero_de_diarias}</p>
+                  <p><strong>Valor total:</strong> R$ {reserva.total_a_pagar},00</p>
+                  <p><strong>Forma de pagamento:</strong> {reserva.pagamento}</p>
+                  <ul>
+                    {reserva.itens && reserva.itens.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="button-container">
+                  <button
+                    type="button"
+                    className="cancel-btn"
+                    onClick={() => handleCancelar(reserva._id, reserva._rev, reserva)}
+                  >
+                    Cancelar reserva
+                  </button>
+                  <button
+                    type="button"
+                    className="login-btn"
+                    onClick={() => gerarPDFDadosReserva(reserva)}
+                  >
+                    Imprimir Dados
+                  </button>
+                </div><br></br><br></br><br></br>
+              </div>
+            ))
+          )}
         </div>
       </div>
-      
       <Footer />
     </div>
   );

@@ -13,9 +13,9 @@ const CadastroDePropriedade = () => {
   const [dataFinal, setDataFinal] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [imagem, setImagem] = useState(null); // Estado para a imagem
-  const [imagemPreview, setImagemPreview] = useState(null); // URL da imagem para preview
-  
+  const [imagens, setImagens] = useState([]); // Estado para armazenar várias imagens
+  const [imagensPreview, setImagensPreview] = useState([]); // URL das imagens para preview
+
   const navigate = useNavigate();
 
   const gerarCodigoUnico = () => {
@@ -29,11 +29,13 @@ const CadastroDePropriedade = () => {
   }, []);
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImagem(file); // Armazena a imagem
-      setImagemPreview(URL.createObjectURL(file)); // Gera o preview
-    }
+    const files = Array.from(event.target.files);
+    const newImagens = [...imagens, ...files]; // Adiciona as novas imagens ao estado
+    setImagens(newImagens);
+
+    // Gera pré-visualizações
+    const previews = newImagens.map(file => URL.createObjectURL(file));
+    setImagensPreview(previews);
   };
 
   const handleSubmit = async (event) => {
@@ -161,22 +163,25 @@ const CadastroDePropriedade = () => {
               />
             </div>
 
-            {/* Campo para upload da imagem */}
+            {/* Campo para upload das imagens */}
             <div className="form-group">
-              <label htmlFor="imagem">Imagem da Propriedade</label>
+              <label htmlFor="imagem">Imagens da Propriedade</label>
               <input
                 type="file"
                 id="imagem"
                 name="imagem"
                 accept="image/*"
                 onChange={handleImageChange}
+                multiple // Permite selecionar várias imagens
               />
             </div>
 
-            {/* Mostrar a imagem de preview se houver */}
-            {imagemPreview && (
+            {/* Mostrar as imagens de preview se houver */}
+            {imagensPreview.length > 0 && (
               <div className="form-group">
-                <img src={imagemPreview} alt="Preview da Propriedade" style={{ width: '300px', height: '200px' }} />
+                {imagensPreview.map((preview, index) => (
+                  <img key={index} src={preview} alt={`Preview da Propriedade ${index + 1}`} style={{ width: '300px', height: '200px', margin: '5px' }} />
+                ))}
               </div>
             )}
 

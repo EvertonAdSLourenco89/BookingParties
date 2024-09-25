@@ -1,0 +1,106 @@
+/* Regras complementares para adicionar rolagem */
+.home-contentprop {
+  overflow-y:auto; /* Habilita rolagem vertical */
+  max-height: 100vh; /* Limita a altura máxima para 80% da viewport */
+}
+
+.grid-container {
+  max-height: 70vh; /* Define a altura máxima do grid */
+  overflow-y: auto; /* Habilita rolagem caso o conteúdo seja maior que o espaço */
+}
+
+/* Mantém os estilos existentes sem modificação */
+.home-container {
+    display: flex;
+    flex-direction:column;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn-cadastrar {
+    display: block;
+    margin: 0 auto 20px;
+    padding: 10px 20px;
+    background-color: #2e0fb5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-header {
+    background-color: #2e0fb5;
+    color: #fff;
+    padding: 1px;
+    text-align: center;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.image-grid-item {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+}
+
+.card-footer button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card-footer button:hover {
+    background-color: #0056b3;
+}
+
+.button-container {
+    display: flex;          /* Usando Flexbox para alinhar os botões */
+    gap: 10px;            /* Espaço entre os botões */
+    margin-top: 10px;     /* Margem superior para separar dos elementos acima */
+}

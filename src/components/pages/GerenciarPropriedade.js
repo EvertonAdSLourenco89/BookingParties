@@ -13,32 +13,30 @@ const EditarPropriedade = () => {
   const [dataFinal, setDataFinal] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [propriedade, setPropriedade] = useState(null); // Objeto completo da propriedade
-  const [imagem, setImagem] = useState(null); // Estado para a imagem
-  const [imagemPreview, setImagemPreview] = useState(null); // URL da imagem para preview
-  
+  const [propriedade, setPropriedade] = useState(null);
+  const [imagens, setImagens] = useState([]); // Altere para um array
+  const [imagensPreview, setImagensPreview] = useState([]);
+
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImagem(file); // Armazena a imagem
-      setImagemPreview(URL.createObjectURL(file)); // Gera o preview
-    }
+    const files = Array.from(event.target.files);
+    const newImagens = [...imagens, ...files];
+    setImagens(newImagens);
+
+    // Gera pré-visualizações
+    const previews = newImagens.map(file => URL.createObjectURL(file));
+    setImagensPreview(previews);
   };
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Recupera o código da propriedade do localStorage
     const codigo = localStorage.getItem('codigo_propriedade');
-    setCodigoPropriedade(codigo);
-
     if (codigo) {
-      // Busca os dados da propriedade automaticamente
+      setCodigoPropriedade(codigo);
       buscarPropriedade(codigo);
     }
   }, []);
 
-  // Função para buscar os dados da propriedade pelo código usando _find
   const buscarPropriedade = async (codigo) => {
     try {
       setLoading(true);
@@ -52,12 +50,13 @@ const EditarPropriedade = () => {
       });
 
       if (response.data.docs.length > 0) {
-        const propriedadeData = response.data.docs[0];  // Propriedade encontrada
-        setPropriedade(propriedadeData); // Armazena a propriedade completa
+        const propriedadeData = response.data.docs[0];
+        setPropriedade(propriedadeData);
         setTipoPropriedade(propriedadeData.tipo_proprietario);
         setPreco(propriedadeData.preco);
         setItensInclusos(propriedadeData.itens.join(', '));
         setDataDisponivel(propriedadeData.data_disponivel);
+        setDataFinal(propriedadeData.data_final);
       } else {
         alert('Propriedade não encontrada');
         setPropriedade(null);
@@ -69,18 +68,18 @@ const EditarPropriedade = () => {
     }
   };
 
-  // Função para atualizar os dados da propriedade
   const handleUpdate = async (event) => {
     event.preventDefault();
 
     const itensArray = itensInclusos.split(',').map(item => item.trim());
 
     const propriedadeDataAtualizada = {
-      ...propriedade, // Manteve os dados originais
+      ...propriedade,
       tipo_proprietario: tipoPropriedade,
       itens: itensArray,
       data_disponivel: dataDisponivel,
       preco: parseFloat(preco),
+      data_final: dataFinal,
     };
 
     try {
@@ -90,7 +89,7 @@ const EditarPropriedade = () => {
           'Content-Type': 'application/json',
           'Authorization': 'Basic ' + btoa('Admin:30115982Aib')
         },
-        params: { rev: propriedade._rev } // CouchDB exige o _rev para atualizações
+        params: { rev: propriedade._rev }
       });
 
       setLoading(false);
@@ -102,7 +101,6 @@ const EditarPropriedade = () => {
     }
   };
 
-  // Função para excluir a propriedade
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -111,7 +109,7 @@ const EditarPropriedade = () => {
           'Content-Type': 'application/json',
           'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
         },
-        params: { rev: propriedade._rev } // CouchDB exige o _rev para exclusão
+        params: { rev: propriedade._rev }
       });
 
       setLoading(false);
@@ -149,7 +147,7 @@ const EditarPropriedade = () => {
                   >
                     <option value="chacara">Chacara</option>
                     <option value="salao">Salao</option>
-                    <option value="areaDeLazer">Area de Lazer</option>
+                    <option value="areaDeLazer">Área de Lazer</option>
                     <option value="sala">Sala</option>
                   </select>
                 </div>
@@ -199,23 +197,30 @@ const EditarPropriedade = () => {
                     value={dataFinal}
                     onChange={(e) => setDataFinal(e.target.value)}
                     required
-                    //min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
 
-                {/* Campo para upload da imagem */}
+                {imagensPreview.length > 0 && (
+                  <div className="form-group">
+                    {imagensPreview.map((preview, index) => (
+                      <img key={index} src={preview} alt={`Preview da Propriedade ${index + 1}`} style={{ width: '300px', height: '200px', margin: '5px' }} />
+                    ))}
+                  </div>
+                )}
+
                 <div className="form-group">
-                  <label htmlFor="imagem">Imagem da Propriedade</label>
+                  <label htmlFor="imagem">Imagens da Propriedade</label>
                   <input
                     type="file"
                     id="imagem"
                     name="imagem"
                     accept="image/*"
                     onChange={handleImageChange}
+                    multiple
                   />
                 </div>
 
-                <button 
+                <button
                   className="login-btn"
                   type="submit" disabled={loading}>
                   {loading ? 'Atualizando...' : 'Atualizar Propriedade'}

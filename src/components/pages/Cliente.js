@@ -63,8 +63,8 @@ const ListaPropriedades = () => {
         const dataISO = data ? formatDateToISO(data) : '';
 
         return (
-          (!codigo || propriedade.codigo_propriedade.includes(codigo)) &&
-          (!tipo || propriedade.tipo_propriedade.includes(tipo)) &&
+          (!codigo || String(propriedade.codigo_propriedade).includes(codigo)) &&  // Convertendo para string
+          (!tipo || propriedade.tipo_propriedade.toLowerCase().includes(tipo.toLowerCase())) &&
           (!preco || Number(propriedade.preco) <= Number(preco)) &&
           (!data || propriedade.data_disponivel === dataISO)
         );
@@ -139,7 +139,7 @@ const ListaPropriedades = () => {
             />
           </div>
           <div><br />
-            <label htmlFor="preco">Preço máximo</label><br />
+            <label htmlFor="preco">Preço Máximo</label><br />
             <input
               type="number"
               id="preco"
@@ -149,7 +149,7 @@ const ListaPropriedades = () => {
             />
           </div>
           <div><br />
-            <label htmlFor="data">Data disponível</label><br />
+            <label htmlFor="data">Data Disponível</label><br />
             <input
               type="text"
               id="data"
@@ -166,51 +166,52 @@ const ListaPropriedades = () => {
             type="submit">Filtrar</button>
         </form>
 
-        <div className="login-container">
-          <ul className="home-container">
-            {propriedades.map((propriedade) => (
-              <li key={propriedade._id}>
+        <div className="grid-container">
+          
+          {propriedades.map((propriedade) => (
+            
+            <div className="card" key={propriedade._id} >
+              
+              <div className="card-header">
                 <h2>Código do Local: {propriedade.codigo_propriedade}</h2>
-                <p>Tipo: {propriedade.tipo_propriedade}</p>
-                <p>Preço: R$ {propriedade.preco}</p>
-                <p>Data disponível: {formatDateToDisplay(propriedade.data_disponivel)}</p> {/* Formata data_disponivel */}
-                <p>Data Máxima: {formatDateToDisplay(propriedade.data_final)}</p> {/* Formata data_final */}
-                <p>Itens disponíveis:</p>
-
-                {/* Verifica se "itens" é um array e exibe a lista */}
-                {Array.isArray(propriedade.itens) ? (
-                  <ul>
-                    {propriedade.itens.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>{propriedade.itens}</p> // Caso não seja array, exibe como texto
-                )}
-
-                <br />
-                <br />
-                <div className="property-image-grid">
-                  {propriedade.imagensAleatorias.map((imagem, index) => (
-                    <img
-                      key={index}
-                      src={`/images/${imagem}`}
-                      alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
-                      className="property-image"
-                    />
+                
+              </div>
+              <div className="property-image-grid">
+                {propriedade.imagensAleatorias.map((imagem, index) => (
+                  <img
+                    key={index}
+                    src={`/images/${imagem}`}
+                    alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
+                    className="property-image"
+                  />
+                ))}
+              </div>
+              <p>Tipo: {propriedade.tipo_propriedade}</p>
+              <p>Preço: R$ {propriedade.preco},00</p>
+              <p>Data Disponível: {formatDateToDisplay(propriedade.data_disponivel)}</p>
+              <p>Data Máxima: {formatDateToDisplay(propriedade.data_final)}</p>
+              <p>Itens Disponíveis:</p>
+              {Array.isArray(propriedade.itens) ? (
+                <ul>
+                  {propriedade.itens.map((item, index) => (
+                    <li key={index}>{item}</li>
                   ))}
-                  <button 
+                </ul>
+              ) : (
+                <p>{propriedade.itens}</p>
+              )}
+              <br />
+               <button 
                     type="button" 
                     className="login-btn"
                     onClick={() => handleReservarClick(propriedade.codigo_propriedade)} // Chama a função de redirecionamento
                   >
                     Reservar
                   </button>
-                  <br />
-                </div>
-              </li>
-            ))}
-          </ul>
+                  <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+             
+            </div>
+          ))}
         </div>
         
         <Footer />

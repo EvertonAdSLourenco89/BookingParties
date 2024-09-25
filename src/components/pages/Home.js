@@ -49,14 +49,16 @@ const Home = () => {
         imagensAleatorias: Array.from({ length: 4 }, () => imagensDisponiveis[Math.floor(Math.random() * imagensDisponiveis.length)])
       }));
 
-      // Aplica os filtros
       const propriedadesFiltradas = docs.filter((propriedade) => {
         const { codigo, tipo, preco, data } = filters;
         const dataISO = data ? formatDateToISO(data) : '';
 
+        // Logs para depuração
+        console.log('Data filtro:', dataISO, 'Data disponível:', propriedade.data_disponivel);
+        
         return (
-          (!codigo || propriedade.codigo_propriedade.includes(codigo)) &&
-          (!tipo || propriedade.tipo_propriedade.includes(tipo)) &&
+          (!codigo || String(propriedade.codigo_propriedade).includes(codigo)) &&  // Convertendo para string
+          (!tipo || propriedade.tipo_propriedade.toLowerCase().includes(tipo.toLowerCase())) &&
           (!preco || Number(propriedade.preco) <= Number(preco)) &&
           (!data || propriedade.data_disponivel === dataISO)
         );
@@ -81,6 +83,9 @@ const Home = () => {
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
+    
+    // Logs para verificar os filtros
+    console.log('Filtros aplicados:', filtros);
     fetchData(filtros);
   };
 
@@ -92,7 +97,7 @@ const Home = () => {
   if (error) return <p>Erro ao carregar dados: {error}</p>;
 
   return (
-    <div className="home-container">
+    <div className="home-containerprop">
       <div className="home-header">
         <div className="left-text">
           <h1>Booking Parties</h1>
@@ -164,49 +169,48 @@ const Home = () => {
         </form>
 
         <h1>Locais adicionados recentemente</h1>
-        <div className="login-container">
-          <ul className="home-container">
-            {propriedades.map((propriedade) => (
-              <li key={propriedade._id}>
-                <h2>Código do Local: {propriedade.codigo_propriedade}</h2>
-                <p>Tipo: {propriedade.tipo_propriedade}</p>
-                <p>Preço: R$ {propriedade.preco}</p>
-                <p>Data Disponível: {formatDateToDisplay(propriedade.data_disponivel)}</p>
-                <p>Data Máxima: {formatDateToDisplay(propriedade.data_final)}</p>
-                <p>Itens Disponíveis:</p>
-
-                {Array.isArray(propriedade.itens) ? (
-                  <ul>
-                    {propriedade.itens.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>{propriedade.itens}</p>
-                )}
-
-                <br />
-                <button
-                  type="button"
-                  className="login-btn"
-                  onClick={() => handleLogarClick(propriedade.codigo_propriedade)} // Passa o código da propriedade
-                >
-                  Logar
-                </button>
-                <br />
-                <div className="property-image-grid">
-                  {propriedade.imagensAleatorias.map((imagem, index) => (
-                    <img
-                      key={index}
-                      src={`/images/${imagem}`}
-                      alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
-                      className="property-image"
-                    />
+        <div className="grid-container">
+          {propriedades.map((propriedade) => (
+            <div className="card" key={propriedade._id} >
+              <div className="card-header">
+                <h2>Codigo do local: {propriedade.codigo_propriedade}</h2>
+              </div>
+              <div className="property-image-grid">
+                {propriedade.imagensAleatorias.map((imagem, index) => (
+                  <img
+                    key={index}
+                    src={`/images/${imagem}`}
+                    alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
+                    className="property-image"
+                  />
+                ))}
+              </div>
+              <p>Tipo: {propriedade.tipo_propriedade}</p>
+              <p>Preço: R$ {propriedade.preco}</p>
+              <p>Data Disponível: {formatDateToDisplay(propriedade.data_disponivel)}</p>
+              <p>Data Máxima: {formatDateToDisplay(propriedade.data_final)}</p>
+              <p>Itens Disponíveis:</p>
+              {Array.isArray(propriedade.itens) ? (
+                <ul>
+                  {propriedade.itens.map((item, index) => (
+                    <li key={index}>{item}</li>
                   ))}
-                </div>
-              </li>
-            ))}
-          </ul>
+                </ul>
+              ) : (
+                <p>{propriedade.itens}</p>
+              )}
+              <br />
+              <button
+                type="button"
+                className="login-btn"
+                onClick={() => handleLogarClick(propriedade.codigo_propriedade)}
+              >
+                Logar
+              </button>
+              <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+             
+            </div>
+          ))}
         </div>
       </div>
 

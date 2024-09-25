@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import '../../ListaPropriedades.css'; // Importe o arquivo CSS
 
 const ListaPropriedades = () => {
   const [propriedades, setPropriedades] = useState([]);
@@ -12,15 +13,28 @@ const ListaPropriedades = () => {
 
   // Lista de imagens disponíveis na pasta public/images
   const imagensDisponiveis = [
-    'imagens (1).jpg',
-    'imagens (2).jpg',
-    'imagens (3).jpg',
-    'imagens (4).jpg',
-    'imagens (5).jpg',
-    'imagens (6).jpg',
-    'imagens (7).jpg',
-    'imagens (8).jpg',
-    'imagens (9).jpg',
+    'imagens (1).jpg',  
+    'imagens (2).jpg',  
+    'imagens (3).jpg',  
+    'imagens (4).jpg',  
+    'imagens (5).jpg',  
+    'imagens (6).jpg',  
+    'imagens (7).jpg',  
+    'imagens (8).jpg',  
+    'imagens (9).jpg',  
+    'imagens (10).jpg',  
+    'imagens (11).jpg',  
+    'imagens (12).jpg',  
+    'imagens (13).jpg',  
+    'imagens (14).jpg',  
+    'imagens (15).jpg',  
+    'imagens (16).jpg',  
+    'imagens (17).jpg',  
+    'imagens (18).jpg',  
+    'imagens (19).jpg',  
+    'imagens (20).jpg',  
+    'imagens (21).jpg',  
+    'imagens (22).jpg',  
     // Adicione mais imagens conforme necessário
   ];
 
@@ -104,60 +118,45 @@ const ListaPropriedades = () => {
   if (error) return <p>Erro ao carregar dados: {error}</p>;
 
   return (
-    <div className="home-container">
+    <div className="home-containerprop">
       <Header />
-      <div className="home-content">
-        <h1>Aqui estão suas propriedades.</h1>
-        <div className="login-container">
-          <form className="login-form">
-            <div className="form-group">
-              {propriedades.length === 0 ? (
-                <div>
-                  <p>Nenhuma propriedade cadastrada.</p>
-                  <button
-                    type="button"
-                    className="login-btn"
-                    onClick={handleCadastrarPropriedade}
-                  >
-                    Cadastrar Propriedade
-                  </button>
+      <div >
+        <h1>Propriedades Cadastradas</h1>
+        <button className="btn-cadastrar" onClick={handleCadastrarPropriedade}>
+          Cadastrar Nova Propriedade
+        </button>
+        <div className="grid-container">
+          
+          {propriedades.map((propriedade) => (
+            <div className="card" key={propriedade._id}>
+              
+              <div className="card-header">
+                <h2>{propriedade.codigo_propriedade}</h2>
+                
+              </div>
+              <div className="card-body">
+                <p><strong>Tipo:</strong> {propriedade.tipo_propriedade}</p>
+                <p><strong>Preço:</strong> R$ {propriedade.preco}</p>
+                <p><strong>Data Disponível:</strong> {formatarData(propriedade.data_disponivel)}</p>
+                <p><strong>Data Limite:</strong> {formatarData(propriedade.data_final)}</p>
+                <p><strong>Itens Disponíveis:</strong></p>
+                <ul>
+                  {propriedade.itens?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+                <div >
+                  {propriedade.imagensAleatorias.map((imagem, index) => (
+                    <img
+                      key={index}
+                      src={`/images/${imagem}`}
+                      alt={`Imagem ${index + 1}`}
+                      className="image-grid-item"
+                    />
+                  ))}
                 </div>
-              ) : (
-                <ul className="home-container">
-                  {propriedades.map((propriedade) => (
-                    <li key={propriedade._id}>
-                      <h2>Código do Local: {propriedade.codigo_propriedade}</h2>
-                      <p>Tipo: {propriedade.tipo_propriedade}</p>
-                      <p>Preço: R$ {propriedade.preco}</p>
-                      <p>Data Disponível: {formatarData(propriedade.data_disponivel)}</p>
-                      <p>Data Limite: {formatarData(propriedade.data_final)}</p>
-                      
-                      <p>Itens Disponíveis:</p>
-
-                      {Array.isArray(propriedade.itens) ? (
-                        <ul>
-                          {propriedade.itens.map((item, index) => (
-                            <li key={index}>{item}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p>{propriedade.itens}</p>
-                      )}
-
-                      {/* Exibe 4 imagens aleatórias */}
-                      <div className="property-image-grid">
-                        {propriedade.imagensAleatorias.map((imagem, index) => (
-                          <img
-                            key={index}
-                            src={`/images/${imagem}`}
-                            alt={`Imagem ${index + 1} de ${propriedade.tipo_propriedade}`}
-                            className="property-image"
-                          />
-                        ))}
-                      </div>
-
-                      <br></br>
-                      <div className="button-container">
+              </div>
+              <div className="button-container">
                         <button 
                             type="button" 
                             className="login-btn"
@@ -173,13 +172,10 @@ const ListaPropriedades = () => {
                             {loading ? 'Excluindo...' : 'Excluir'}
                         </button>
                        </div>
-
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </form>
+                       <br></br><br></br><br></br><br></br><br></br><br></br>
+                       
+              </div>
+          ))}
         </div>
       </div>
       <Footer />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import axios from 'axios';
+import '../../ListaPropriedades.css'; // Importe o arquivo CSS
 
 const ListaReservas = () => {
   const [codigoPropriedade, setCodigoPropriedade] = useState(''); // Estado para o código da propriedade
@@ -13,8 +14,8 @@ const ListaReservas = () => {
   // Função para formatar data no formato DD/MM/YYYY
   const formatarData = (dataString) => {
     const data = new Date(dataString);
-    const dia = String(data.getDate()).padStart(2, '0'); // Adiciona zero à esquerda se necessário
-    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
     const ano = data.getFullYear();
     return `${dia}/${mes}/${ano}`;
   };
@@ -30,8 +31,9 @@ const ListaReservas = () => {
         }
       });
 
-      const docs = response.data.rows.map(row => row.doc); // Obtém os documentos completos
-      setReservas(docs); // Armazena todas as reservas
+      const docs = response.data.rows.map(row => row.doc);
+      setReservas(docs);
+      setReservasFiltradas(docs); // Inicialmente, todas as reservas estão filtradas
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -42,10 +44,10 @@ const ListaReservas = () => {
   // Função para filtrar as reservas pelo código da propriedade
   const filtrarReservas = () => {
     if (codigoPropriedade === '') {
-      setReservasFiltradas(reservas); // Se o campo estiver vazio, mostra todas as reservas
+      setReservasFiltradas(reservas);
     } else {
       const filtradas = reservas.filter(reserva => reserva.codigo_propriedade === codigoPropriedade);
-      setReservasFiltradas(filtradas); // Armazena as reservas filtradas
+      setReservasFiltradas(filtradas);
     }
   };
 
@@ -66,11 +68,7 @@ const ListaReservas = () => {
         });
         // Remover a reserva do estado após a exclusão
         setReservas(prevReservas => prevReservas.filter(reserva => reserva._id !== id));
-  
-        // Limpar o campo de código da propriedade e exibir todas as reservas
-        setCodigoPropriedade('');
-        setReservasFiltradas(reservas.filter(reserva => reserva._id !== id));
-        
+        setReservasFiltradas(prevReservas => prevReservas.filter(reserva => reserva._id !== id));
       } catch (err) {
         setError(`Erro ao cancelar a reserva: ${err.message}`);
       }
@@ -78,62 +76,59 @@ const ListaReservas = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="home-containerprop">
       <Header />
-
-      <div className="home-content">
+      <div>
         <h1>Buscar Reservas por Código da Propriedade</h1>
-        <div className="login-container">
-          <div className="form-group">
-            <label htmlFor="codigoPropriedade">Digite o código da propriedade:</label>
-            <input
-              type="text"
-              id="codigoPropriedade"
-              value={codigoPropriedade}
-              onChange={(e) => setCodigoPropriedade(e.target.value)} // Atualiza o valor digitado
-              className="form-control"
-            /><br></br>
-            <br></br>
-            <button type="button"
-              className="login-btn"
-              onClick={filtrarReservas} disabled={loading}>
-              {loading ? 'Filtrando...' : 'Buscar Reservas'}
-            </button>
-          </div>
+        <div className="form-group">
+          <label htmlFor="codigoPropriedade">Digite o código da propriedade:</label>
+          <input
+            type="text"
+            id="codigoPropriedade"
+            value={codigoPropriedade}
+            onChange={(e) => setCodigoPropriedade(e.target.value)} // Atualiza o valor digitado
+            className="form-control"
+          /><br /><br />
+          <button type="button"
+            className="login-btn"
+            onClick={filtrarReservas} disabled={loading}>
+            {loading ? 'Filtrando...' : 'Buscar Reservas'}
+          </button>
+        </div>
 
-          <div className="form-group">
-            <ul className="home-container">
-              {reservasFiltradas.length > 0 ? (
-                reservasFiltradas.map((reserva) => (
-                  <li key={reserva._id}>
-                    <h2>Código da reserva: {reserva.codigo_reserva}</h2>
-                    <p>Código da Propriedade: {reserva.codigo_propriedade}</p>
-                    <p>Nome Completo: {reserva.nome_completo}</p>
-                    <p>Email: {reserva.email}</p>
-                    <p>Telefone: {reserva.telefone}</p>
-                    <p>Endereço: {reserva.endereco}</p>
-                    <p>Data da Reserva: {formatarData(reserva.data_disponivel)}</p> {/* Aplicando a formatação aqui */}
-                    <p>Data da Final : {formatarData(reserva.data_final_da_reserva)}</p>
-                    <p>Diarias: {reserva.numero_de_diarias}</p>
-                    <p>Valor total: R$ {reserva.total_a_pagar},00</p>
-                    <p>Forma de pagamento: {reserva.forma_pagamento}</p>
-                    <br />
-                    <button type="button" className="cancel-btn"
-                      onClick={() => handleCancelar(reserva._id, reserva._rev)}
-                    >Cancelar</button>
-                    <br />
-                  </li>
-                ))
-              ) : (
-                <p>Nenhuma reserva encontrada.</p>
-              )}
-            </ul>
-          </div>
-
+        <div className="grid-container">
+          {loading && <p>Carregando...</p>}
           {error && <p>Erro: {error}</p>}
+          {reservasFiltradas.length > 0 ? (
+            reservasFiltradas.map((reserva) => (
+              <div className="card" key={reserva._id}>
+                <div className="card-header">
+                  <h2>Código da reserva: {reserva.codigo_reserva}</h2>
+                </div>
+                <div className="card-body">
+                  <p><strong>Código da Propriedade:</strong> {reserva.codigo_propriedade}</p>
+                  <p><strong>Nome Completo:</strong> {reserva.nome_completo}</p>
+                  <p><strong>Email:</strong> {reserva.email}</p>
+                  <p><strong>Telefone:</strong> {reserva.telefone}</p>
+                  <p><strong>Endereço:</strong> {reserva.endereco}</p>
+                  <p><strong>Data da Reserva:</strong> {formatarData(reserva.data_disponivel)}</p>
+                  <p><strong>Data Final:</strong> {formatarData(reserva.data_final_da_reserva)}</p>
+                  <p><strong>Diárias:</strong> {reserva.numero_de_diarias}</p>
+                  <p><strong>Valor Total:</strong> R$ {reserva.total_a_pagar},00</p>
+                  <p><strong>Forma de Pagamento:</strong> {reserva.forma_pagamento}</p>
+                </div>
+                <div className="button-container">
+                  <button type="button" className="cancel-btn"
+                    onClick={() => handleCancelar(reserva._id, reserva._rev)}
+                  >Cancelar</button>
+                </div><br></br><br></br><br></br><br></br>
+              </div>
+            ))
+          ) : (
+            <p>Nenhuma reserva encontrada.</p>
+          )}
         </div>
       </div>
-
       <Footer />
     </div>
   );

@@ -32,7 +32,7 @@ const Header = ({ showLinks = true }) => {
                                 <li><Link to="/proprietario">Home</Link></li>
                                 <li><Link to="/cadastrodepropriedade">Cadastro de Propriedades</Link></li>
                                 <li><Link to="/reservasProprietario">Gerenciar Reservas</Link></li>
-                                <li><Link to="/teste">testeLink</Link></li>
+                                <li><Link to="/teste">teste</Link></li>
                             </>
                         )}
                         {role === 'cliente' && (
