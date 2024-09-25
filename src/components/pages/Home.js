@@ -109,9 +109,11 @@ const Home = () => {
         </div>
         <div>
           <br /><br /><br /><br />
-          <Link to="/login" className="login2-btn">Anuncie sua propriedade</Link>
+          <Link to="/cadastroLogin" className="login2-btn">Anuncie sua propriedade</Link>
           <br />
-          <Link to="/login" className="login2-btn">Login</Link>
+          <Link to="/login" className="login2-btn" style={{ marginRight: '20px' }}>Login</Link>
+          <Link to="/cadastroLogin" className="login2-btn">Cadastre-se</Link>
+
         </div>
       </div>
 

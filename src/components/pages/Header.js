@@ -8,7 +8,7 @@ const Header = ({ showLinks = true }) => {
 
     const handleLogout = (e) => {
         e.preventDefault();
-        authService.logout(navigate);
+        authService.logout(navigate); // Você pode manter isso caso queira fazer logout em outras partes do app
     };
 
     return (
@@ -17,14 +17,14 @@ const Header = ({ showLinks = true }) => {
                 <h1>Booking Parties</h1>
                 <p>Consulte e agende os melhores espaços e locais para suas festas e eventos.</p>
             </div>
-            {showLinks && (
+            {showLinks ? (
                 <nav className="nav-bar">
                     <ul className="nav-list">
                         {role === 'admin' && (
                             <>
                                 <li><Link to="/admin">Home</Link></li>
                                 <li><Link to="/admin/gerenciar">Gerenciar reservas</Link></li>
-                                <li><Link to="/admin/logs">Visualizar Logs</Link></li>
+                                <li><Link to="/consultaLogins">Visualizar Logins</Link></li>
                             </>
                         )}
                         {role === 'proprietario' && (
@@ -40,11 +40,18 @@ const Header = ({ showLinks = true }) => {
                                 <li><Link to="/cliente">Home</Link></li>
                                 <li><Link to="/minhasreservas">Minhas reservas</Link></li>
                                 <li><Link to="/cadastroreserva">Fazer reserva</Link></li>
-
                             </>
                         )}
                         <li>
-                        <Link to="/" >Sair</Link>
+                            <Link to="/" onClick={handleLogout}>Sair</Link>
+                        </li>
+                    </ul>
+                </nav>
+            ) : (
+                <nav className="nav-bar">
+                    <ul className="nav-list">
+                        <li>
+                            <Link to="/">Sair</Link> {/* Redirecionando para a página inicial */}
                         </li>
                     </ul>
                 </nav>

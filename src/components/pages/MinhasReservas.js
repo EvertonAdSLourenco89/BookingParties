@@ -45,7 +45,7 @@ const ListaReservas = () => {
 
     // Conteúdo da reserva
     doc.setFontSize(14);
-    doc.text(`Código da Reserva: ${reserva.codigo_reserva}`, 10, 30);
+    doc.text(`Código da Reserva: ${reserva.codigo_reserva}`, 20, 30);
     doc.text(`Nome Completo: ${reserva.nome_completo}`, 10, 40);
     doc.text(`E-mail: ${reserva.email}`, 10, 50);
     doc.text(`Telefone: ${reserva.telefone}`, 10, 60);
@@ -56,7 +56,7 @@ const ListaReservas = () => {
     doc.text(`Diárias: ${reserva.numero_de_diarias}`, 10, 110);
     doc.text(`Total: R$ ${reserva.total_a_pagar},00`, 10, 120);
     doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 130);
-
+    
     // Baixar o PDF
     doc.save(`Booking Parties - cancelamento_reserva_${reserva.codigo_reserva}.pdf`);
   };
@@ -103,6 +103,7 @@ const ListaReservas = () => {
         setReservas(prevReservas => prevReservas.filter(r => r._id !== id));
         // Gera o PDF após o cancelamento
         gerarPDF(reserva);
+        alert(`A reserva ${reserva.codigo_reserva} foi cancelada com sucesso!`);
       } catch (err) {
         setError(`Erro ao cancelar a reserva: ${err.message}`);
       }
@@ -119,14 +120,14 @@ const ListaReservas = () => {
         <h1>Aqui estão suas reservas.</h1>
         <div className="grid-container">
           {reservas.length === 0 ? (
-            <div>
-              <p>Não há reservas. Se já sabe o código do local, clique no botão abaixo ou em voltar para consultar locais disponíveis.</p>
-              <button type="button" className='login-btn' onClick={() => navigate('/cadastroReserva')}>
-                Fazer uma reserva
-              </button>
-              <br />
-              <Link to="/cliente">Voltar</Link>
-            </div>
+              <div className="form-group">
+                <p>Não há reservas. Se já sabe o código do local, clique no botão abaixo ou em voltar para consultar locais disponíveis.</p>
+                <button type="button" className='login-btn' onClick={() => navigate('/cadastroReserva')}>
+                  Fazer uma reserva
+                </button>
+                <br />
+                <Link to="/cliente">Voltar</Link>
+              </div>
           ) : (
             reservas.map((reserva) => (
               <div className="card" key={reserva._id}>

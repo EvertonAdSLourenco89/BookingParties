@@ -136,7 +136,7 @@ const ListaPropriedades = () => {
               </div>
               <div className="card-body">
                 <p><strong>Tipo:</strong> {propriedade.tipo_propriedade}</p>
-                <p><strong>Preço:</strong> R$ {propriedade.preco}</p>
+                <p><strong>Preço:</strong> R$ {propriedade.preco},00</p>
                 <p><strong>Data Disponível:</strong> {formatarData(propriedade.data_disponivel)}</p>
                 <p><strong>Data Limite:</strong> {formatarData(propriedade.data_final)}</p>
                 <p><strong>Itens Disponíveis:</strong></p>

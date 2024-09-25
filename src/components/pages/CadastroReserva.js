@@ -286,6 +286,8 @@ const verificarCodigoPropriedade = async () => {
     console.error(error);
   }
 };
+// Novo estado para armazenar a data e hora da reserva
+const [dataHoraReserva, setDataHoraReserva] = useState('');
 
   return (
     <div className="home-container">

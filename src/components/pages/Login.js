@@ -25,40 +25,38 @@ const Login = () => {
   };
 
   return (
-    
-    <div >
-       <Header />
+    <div>
+      <Header isLoginPage={true} />
       <div className="login-container">
-     
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="login-form">
-        <div className="form-group">
-          <label htmlFor="username">Usuário</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            placeholder="Digite seu usuário"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Senha</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Digite sua senha"
-          />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="login-btn">Entrar</button>
-        <br />
-        <Link to="/" >Voltar</Link>
-      </form>
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="username">Usuário</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Digite seu usuário"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Senha</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Digite sua senha"
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="login-btn">Entrar</button>
+          <br />
+          <Link to="/">Voltar</Link>
+        </form>
       </div>
       <Footer />
     </div>

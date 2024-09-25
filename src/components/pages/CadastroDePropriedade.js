@@ -104,9 +104,10 @@ const CadastroDePropriedade = () => {
                 onChange={(e) => setTipoPropriedade(e.target.value)}
                 required
               >
-                <option value="chacara">Chacara</option>
-                <option value="salao">Salao</option>
-                <option value="areaDeLazer">Area de Lazer</option>
+                <option value="chacara">Chácara</option>
+                <option value="chacara">Sítio</option>
+                <option value="salao">Salão</option>
+                <option value="areaDeLazer">Área de Lazer</option>
                 <option value="sala">Sala</option>
               </select>
             </div>
@@ -118,10 +119,15 @@ const CadastroDePropriedade = () => {
                 id="preco"
                 name="preco"
                 value={preco}
-                onChange={(e) => setPreco(e.target.value)}
+                onChange={(e) => {
+                  const valorFormatado = e.target.value.replace(',', '.');
+                  setPreco(valorFormatado);
+                }}
+                placeholder="Ex: 150"
                 required
               />
             </div>
+
 
             <div className="form-group">
               <label htmlFor="itensInclusos">Itens Inclusos</label>

@@ -12,7 +12,9 @@ import CadastroReserva from './components/pages/CadastroReserva';
 import MinhasReservas from'./components/pages/MinhasReservas';
 import ListaPropriedades from './components/pages/ListaPropriedades';
 import ReservasProprietario from './components/pages/ReservasProprietario';
-import Teste from './components/pages/Teste'
+import CadastroDeLogin from './components/pages/CadastroLogin';
+import Teste from './components/pages/Teste';
+import LoginsAdmin from './components/pages/LoginsAdmin';
 
 
 
@@ -34,6 +36,8 @@ function App() {
         <Route path="/cadastroreserva" element={<CadastroReserva/>} />
         <Route path="/teste" element={<Teste/>} />
         <Route path="/reservasProprietario" element={<ReservasProprietario/>} />
+        <Route path="/cadastroLogin" element={<CadastroDeLogin/>}/>
+        <Route path="/consultaLogins" element={<LoginsAdmin/>}/>
       </Routes>
     </Router>
   );
