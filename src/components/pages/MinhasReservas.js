@@ -38,14 +38,14 @@ const ListaReservas = () => {
     const dataHoraAtual = new Date().toLocaleString('pt-BR');
 
     // Cabeçalho do PDF
-    doc.setFontSize(18);
-    doc.text('Booking Parties - Cancelamento da reserva: ', 10, 10);
+    doc.setFontSize(20);
+    doc.text(`Booking Parties - Cancelamento da reserva ${reserva.codigo_reserva}`, 10, 10);
     doc.setFontSize(12);
     doc.text(`Data e Hora: ${dataHoraAtual}`, 10, 20);
 
     // Conteúdo da reserva
     doc.setFontSize(14);
-    doc.text(`Código da Reserva: ${reserva.codigo_reserva}`, 20, 30);
+    doc.text(`Código da Reserva: ${reserva.codigo_reserva}/ Código do local: ${reserva.codigo_propriedade}`, 20, 30);
     doc.text(`Nome Completo: ${reserva.nome_completo}`, 10, 40);
     doc.text(`E-mail: ${reserva.email}`, 10, 50);
     doc.text(`Telefone: ${reserva.telefone}`, 10, 60);
@@ -58,7 +58,7 @@ const ListaReservas = () => {
     doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 130);
     
     // Baixar o PDF
-    doc.save(`Booking Parties - cancelamento_reserva_${reserva.codigo_reserva}.pdf`);
+    doc.save(`Booking Parties - Cancelamento da reserva ${reserva.codigo_reserva}.pdf`);
   };
 
   const gerarPDFDadosReserva = (reserva) => {
@@ -66,14 +66,14 @@ const ListaReservas = () => {
     const dataHoraAtual = new Date().toLocaleString('pt-BR');
     
     // Cabeçalho do PDF
-    doc.setFontSize(18);
-    doc.text('Booking Parties - Comprovante da reserva', 10, 10);
+    doc.setFontSize(20);
+    doc.text(`Booking Parties - Comprovante da reserva ${reserva.codigo_reserva}`, 10, 10);
     doc.setFontSize(12);
     doc.text(`Data e Hora: ${dataHoraAtual}`, 10, 20);
     
     // Conteúdo da reserva
     doc.setFontSize(14);
-    doc.text(`Código da Reserva: ${reserva.codigo_reserva}`, 20, 30);
+    doc.text(`Código da Reserva: ${reserva.codigo_reserva} / Código do local: ${reserva.codigo_propriedade}`, 20, 30);
     doc.text(`Nome Completo: ${reserva.nome_completo}`, 10, 40);
     doc.text(`E-mail: ${reserva.email}`, 10, 50);
     doc.text(`Telefone: ${reserva.telefone}`, 10, 60);
@@ -86,7 +86,7 @@ const ListaReservas = () => {
     doc.text(`Forma de Pagamento: ${reserva.pagamento}`, 10, 130);
 
     // Baixar o PDF
-    doc.save(`Dados_Reserva_${reserva.codigo_reserva}.pdf`);
+    doc.save(`Booking Parties - Dados da reserva ${reserva.codigo_reserva}.pdf`);
   };
 
   const handleCancelar = async (id, rev, reserva) => {
