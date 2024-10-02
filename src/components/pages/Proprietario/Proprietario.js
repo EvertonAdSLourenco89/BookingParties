@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
-import '../../ListaPropriedades.css'; // Importe o arquivo CSS
+import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
+import '../../../../src/ListaPropriedades.css'; // Importe o arquivo CSS
 
 const ListaPropriedades = () => {
   const [propriedades, setPropriedades] = useState([]);
@@ -118,7 +118,7 @@ const ListaPropriedades = () => {
   if (error) return <p>Erro ao carregar dados: {error}</p>;
 
   return (
-    <div className="home-containerprop">
+    <div className="home-container">
       <Header />
       <div >
         <h1>Propriedades Cadastradas</h1>
@@ -131,10 +131,11 @@ const ListaPropriedades = () => {
             <div className="card" key={propriedade._id}>
               
               <div className="card-header">
-                <h2>{propriedade.codigo_propriedade}</h2>
+                <h2>Propriedade: {propriedade.codigo_propriedade}</h2>
                 
               </div>
               <div className="card-body">
+              
                 <p><strong>Tipo:</strong> {propriedade.tipo_propriedade}</p>
                 <p><strong>Preço:</strong> R$ {propriedade.preco},00</p>
                 <p><strong>Data Disponível:</strong> {formatarData(propriedade.data_disponivel)}</p>
@@ -154,9 +155,9 @@ const ListaPropriedades = () => {
                       className="image-grid-item"
                     />
                   ))}
+                  
                 </div>
-              </div>
-              <div className="button-container">
+                <div className="button-container">
                         <button 
                             type="button" 
                             className="login-btn"
@@ -170,9 +171,11 @@ const ListaPropriedades = () => {
                             onClick={() => handleDelete(propriedade)} disabled={loading}
                         >
                             {loading ? 'Excluindo...' : 'Excluir'}
-                        </button>
-                       </div>
-                       <br></br><br></br><br></br><br></br><br></br><br></br>
+                        </button><br/>
+                </div>
+                
+              </div>
+                <br/>
                        
               </div>
           ))}

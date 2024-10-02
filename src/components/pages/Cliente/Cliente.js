@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Importa o hook useNavigate
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
 
 const ListaPropriedades = () => {
   const [propriedades, setPropriedades] = useState([]); // Estado para armazenar as propriedades
@@ -208,7 +208,7 @@ const ListaPropriedades = () => {
                   >
                     Reservar
                   </button>
-                  <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                  <br /><br /><br />
              
             </div>
           ))}

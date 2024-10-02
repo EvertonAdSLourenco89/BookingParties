@@ -1,10 +1,10 @@
 const authService = {
   users: [
-    { username: 'admin', password: '123', role: 'admin' },
-    { username: 'proprietario', password: '123', role: 'proprietario' },
-    { username: 'cliente', password: '123', role: 'cliente' },
+    { username: 'admin', password: '123', role: 'admin', email: 'admin@admin', name: 'admin' },
+    { username: 'proprietario', password: '123', role: 'proprietario', email: 'proprietario@proprietario', name: 'proprietario' },
+    { username: 'cliente', password: '123', role: 'cliente', email: 'cliente@cliente', name: 'cliente' },
   ],
-  
+
   getUsers: () => authService.users.map(user => ({
     username: user.username,
     role: user.role,
@@ -12,24 +12,25 @@ const authService = {
     email: user.email
   })),
 
-  register: (username, password, role = 'proprietario') => {
+  register: (username, password, name, email, role = 'proprietario') => {
     const userExists = authService.users.some(user => user.username === username);
     if (userExists) {
       return { error: 'Usuário já existe!' };
     }
 
-    const newUser = { username, password, role };
+    const newUser = { username, password, name, email, role };
     authService.users.push(newUser);
     localStorage.setItem('user', JSON.stringify(newUser.role));
     return newUser;
   },
-  register2: (username, password, role = 'proprietario') => {
+
+  register2: (username, password, name, email, role = 'cliente') => {
     const userExists = authService.users.some(user => user.username === username);
     if (userExists) {
       return { error: 'Usuário já existe!' };
     }
 
-    const newUser = { username, password, role };
+    const newUser = { username, password, name, email, role };
     authService.users.push(newUser);
     localStorage.setItem('user', JSON.stringify(newUser.role));
     return newUser;

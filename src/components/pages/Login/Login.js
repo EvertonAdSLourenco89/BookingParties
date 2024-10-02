@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import authService from '../../service/authService';
+import authService from '../../../service/authService';
 import { Link } from 'react-router-dom';
-import Footer from '../pages/Footer';
-import Header from './Header';
+import Footer from '../../layout/Footer';
+import Header from '../../layout/Header';
 
 const Login = () => {
   

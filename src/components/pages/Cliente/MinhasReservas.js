@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom'; // Importa o hook useNavigate e Link
 import jsPDF from 'jspdf'; // Importa jsPDF
-import '../../ListaPropriedades.css'; // Importe o arquivo CSS
+import '../../../../src/App.css'; // Importe o arquivo CSS
 
 const ListaReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -131,10 +131,13 @@ const ListaReservas = () => {
           ) : (
             reservas.map((reserva) => (
               <div className="card" key={reserva._id}>
+                
                 <div className="card-header">
                   <h2>Código da Reserva: {reserva.codigo_reserva}</h2>
                 </div>
+                
                 <div className="card-body">
+                
                   <p><strong>Código do Local:</strong> {reserva.codigo_propriedade}</p>
                   <p><strong>Nome Completo:</strong> {reserva.nome_completo}</p>
                   <p><strong>E-mail:</strong> {reserva.email}</p>
@@ -167,7 +170,8 @@ const ListaReservas = () => {
                   >
                     Imprimir Dados
                   </button>
-                </div><br></br><br></br><br></br>
+                </div><br/>
+                
               </div>
             ))
           )}

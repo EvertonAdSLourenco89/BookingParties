@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import authService from '../../service/authService'; // Importa o serviço de autenticação
-import Header from './Header';
-import Footer from './Footer';
+import authService from '../../../service/authService'; // Importa o serviço de autenticação
+import Footer from '../../layout/Footer';
+import Header from '../../layout/Header';
 
 const ConsultaLogins = () => {
   const [users, setUsers] = useState([]);

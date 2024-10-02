@@ -1,23 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Home from './components/pages/Home';
-import Login from './components/pages/Login';
-import Proprietario from './components/pages/Proprietario';
-import Admin from './components/pages/Admin';
-import Cliente from './components/pages/Cliente';
-import CadastroDePropriedade from './components/pages/CadastroDePropriedade';
-import GerenciarPropriedade from './components/pages/GerenciarPropriedade';
-import CadastroReserva from './components/pages/CadastroReserva';
-import MinhasReservas from'./components/pages/MinhasReservas';
-import ListaPropriedades from './components/pages/ListaPropriedades';
-import ReservasProprietario from './components/pages/ReservasProprietario';
-import CadastroDeLogin from './components/pages/CadastroLogin';
-import Teste from './components/pages/Teste';
-import LoginsAdmin from './components/pages/LoginsAdmin';
-
-
-
+import '../App.css';
+import Home from '../components/Home';
+import Teste from '../components/Teste';
+import Admin from '../components/pages/Admin/Admin';
+import LoginsAdmin from '../components/pages/Admin/LoginsAdmin';
+import CadastroReserva from '../components/pages/Cliente/CadastroReserva';
+import Cliente from '../components/pages/Cliente/Cliente';
+import MinhasReservas from'../components/pages/Cliente/MinhasReservas';
+import CadastroDeLogin from '../components/pages/Login/CadastroLogin';
+import Login from '../components/pages/Login/Login';
+import CadastroDePropriedade from '../components/pages/Proprietario/CadastroDePropriedade';
+import GerenciarPropriedade from '../components/pages/Proprietario/GerenciarPropriedade';
+import ListaPropriedades from '../components/pages/Proprietario/ListaPropriedades';
+import Proprietario from '../components/pages/Proprietario/Proprietario';
+import ReservasProprietario from '../components/pages/Proprietario/ReservasProprietario';
 
 function App() {
   return (

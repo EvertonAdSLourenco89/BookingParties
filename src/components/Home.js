@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import Footer from './Footer';
-import Header from './Header';
+import Footer from './layout/Footer';
+import Header from './layout/Header';
 
 const Home = () => {
   const [propriedades, setPropriedades] = useState([]);
@@ -97,12 +97,12 @@ const Home = () => {
   if (error) return <p>Erro ao carregar dados: {error}</p>;
 
   return (
-    <div className="home-containerprop">
+    <div className="home-container">
       <div className="home-header">
         <div className="left-text">
           <h1>Booking Parties</h1>
           <div>
-            <br /><br /><br /><br />
+            <br />
             <h1>Encontre o lugar perfeito para sua Festa e Evento</h1>
             <h2>Chácaras, áreas de lazer, salões de festas...</h2>
           </div>
@@ -209,7 +209,7 @@ const Home = () => {
               >
                 Logar
               </button>
-              <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+              <br /><br /><br />
              
             </div>
           ))}

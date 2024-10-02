@@ -25,7 +25,7 @@ h1 {
     display: block;
     margin: 0 auto 20px;
     padding: 10px 20px;
-    background-color: #2e0fb5;
+    background-color: #b55a0f;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -51,7 +51,7 @@ h1 {
 }
 
 .card-header {
-    background-color: #2e0fb5;
+    background-color: #b55a0f;
     color: #fff;
     padding: 1px;
     text-align: center;
@@ -100,7 +100,15 @@ h1 {
 }
 
 .button-container {
-    display: flex;          /* Usando Flexbox para alinhar os botões */
-    gap: 10px;            /* Espaço entre os botões */
+    margin-left: 0px;
+    display: center;          /* Usando Flexbox para alinhar os botões */
+    gap: 50px;            /* Espaço entre os botões */
     margin-top: 10px;     /* Margem superior para separar dos elementos acima */
 }
+
+.button-containerprop {
+    margin-left: 30px;
+    display: center;          /* Usando Flexbox para alinhar os botões */
+    gap: 0px;            /* Espaço entre os botões */
+    margin-top: 10px;     /* Margem superior para separar dos elementos acima */
+  }

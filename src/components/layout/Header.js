@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../service/authService';
 
 const Header = ({ showLinks = true }) => {
     const navigate = useNavigate();
     const role = authService.getCurrentUser();
+    const [backgroundImage, setBackgroundImage] = useState('');
 
     const handleLogout = (e) => {
         e.preventDefault();
-        authService.logout(navigate); // Você pode manter isso caso queira fazer logout em outras partes do app
+        authService.logout(navigate); // Logout do usuário
     };
 
+    useEffect(() => {
+        // Lista de imagens disponíveis na pasta public/images
+        const images = [
+            '/imagens(1).jpg',
+            '/imagens(2).jpg',
+            // Adicione mais caminhos de imagens conforme necessário
+        ];
+
+        // Seleciona uma imagem aleatória
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+        setBackgroundImage(randomImage);
+    }, []);
+
     return (
-        <header className="home-header">
+        <header 
+            className="home-header"
+            style={{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+        >
             <div className="system-name">
                 <h1>Booking Parties</h1>
                 <p>Consulte e agende os melhores espaços e locais para suas festas e eventos.</p>
@@ -43,7 +64,7 @@ const Header = ({ showLinks = true }) => {
                             </>
                         )}
                         <li>
-                            <Link to="/" onClick={handleLogout}>Sair</Link>
+                            <Link to="/home" onClick={handleLogout}>Sair</Link>
                         </li>
                     </ul>
                 </nav>
@@ -51,7 +72,7 @@ const Header = ({ showLinks = true }) => {
                 <nav className="nav-bar">
                     <ul className="nav-list">
                         <li>
-                            <Link to="/">Sair</Link> {/* Redirecionando para a página inicial */}
+                            <Link to="/home">Sair</Link> {/* Redirecionando para a página inicial */}
                         </li>
                     </ul>
                 </nav>

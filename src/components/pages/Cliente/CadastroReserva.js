@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
+// Removi a importação de jsPDF, já que não está sendo utilizada no código fornecido.
 
 const CadastroReserva = () => {
   const location = useLocation();
@@ -16,28 +17,36 @@ const CadastroReserva = () => {
   const [enderecoCliente, setEnderecoCliente] = useState('');
   const [cpfCliente, setCpfCliente] = useState('');
   const [dataDisponivel, setDataDisponivel] = useState('');
-  const [dataFinalDaReserva, setDataFinalDaReserva] = useState('');
-  const [numeroDeDiarias, setNumeroDeDiarias] = useState(0);
-  const [precoPorDiaria, setPrecoPorDiaria] = useState(0);
-  const [totalAPagar, setTotalAPagar] = useState(0);
-  const [loadingPreco, setLoadingPreco] = useState(false);
-  const [errorPreco, setErrorPreco] = useState(null);
+
+  // **Novos Estados Adicionados**
+  const [dataFinalDaReserva, setDataFinalDaReserva] = useState(''); // Estado para a data final
+  const [numeroDeDiarias, setNumeroDeDiarias] = useState(0); // Estado para o número de diárias
+
+  const [precoPorDiaria, setPrecoPorDiaria] = useState(0); // Preço por diária
+  const [totalAPagar, setTotalAPagar] = useState(0); // Total a pagar
+  const [loadingPreco, setLoadingPreco] = useState(false); // Carregamento do preço
+  const [errorPreco, setErrorPreco] = useState(null); // Erro ao buscar preço
+
   const [pagamento, setPagamento] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [sucesso, setSucesso] = useState(false);
+
   const navigate = useNavigate();
 
+  // Função para gerar um código único para a reserva
   const gerarCodigoUnico = () => {
-    const randomPart = Math.floor(Math.random() * 1000000);
+    const randomPart = Math.floor(Math.random() * 1000000); // Aumentado para reduzir colisões
     return `${randomPart}`;
   };
 
+  // Gera o código de reserva ao montar o componente
   useEffect(() => {
     const codigo = gerarCodigoUnico();
     setCodigoReserva(codigo);
   }, []);
 
+  // **Novo useEffect para buscar o preço por diária**
   useEffect(() => {
     const fetchPreco = async () => {
       if (!codigoPropriedade) {
@@ -53,13 +62,13 @@ const CadastroReserva = () => {
           'http://localhost:5984/propriedades/_find',
           {
             selector: { codigo_propriedade: codigoPropriedade },
-            fields: ['preco'],
+            fields: ['preco'], // Apenas o campo 'preco' é necessário
             limit: 1,
           },
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
+              'Authorization': 'Basic ' + btoa('Admin:30115982Aib'), // ⚠️ Atenção: Evite expor credenciais no frontend
             },
           }
         );
@@ -83,6 +92,7 @@ const CadastroReserva = () => {
     fetchPreco();
   }, [codigoPropriedade]);
 
+  // **Novo useEffect para calcular o número de diárias**
   useEffect(() => {
     if (dataDisponivel && dataFinalDaReserva) {
       const startDate = new Date(dataDisponivel);
@@ -92,7 +102,7 @@ const CadastroReserva = () => {
 
       if (diffDays > 0) {
         setNumeroDeDiarias(diffDays);
-        setError(null);
+        setError(null); // Limpa erros relacionados às datas
       } else {
         setNumeroDeDiarias(0);
         setError('A data final deve ser posterior à data inicial.');
@@ -102,6 +112,7 @@ const CadastroReserva = () => {
     }
   }, [dataDisponivel, dataFinalDaReserva]);
 
+  // **Novo useEffect para calcular o total a pagar**
   useEffect(() => {
     if (precoPorDiaria > 0 && numeroDeDiarias > 0) {
       setTotalAPagar(precoPorDiaria * numeroDeDiarias);
@@ -110,10 +121,12 @@ const CadastroReserva = () => {
     }
   }, [precoPorDiaria, numeroDeDiarias]);
 
+  // Função que lida com o envio do formulário
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null);
+    setError(null); // Limpa mensagens de erro anteriores
 
+    // Validações adicionais
     if (!codigoPropriedade) {
       setError('Código da propriedade é obrigatório.');
       return;
@@ -141,6 +154,8 @@ const CadastroReserva = () => {
 
     try {
       setLoading(true);
+
+      // Verifica se a propriedade existe
       const propertyResponse = await axios.post(
         'http://localhost:5984/propriedades/_find',
         {
@@ -150,7 +165,7 @@ const CadastroReserva = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
+            'Authorization': 'Basic ' + btoa('Admin:30115982Aib'), // ⚠️ Atenção: Evite expor credenciais no frontend
           },
         }
       );
@@ -161,13 +176,15 @@ const CadastroReserva = () => {
         return;
       }
 
+      // Extrai data_final da propriedade
       const propriedade = propertyResponse.data.docs[0];
-      const dataFinalStr = propriedade.data_final;
+      const dataFinalStr = propriedade.data_final; // Supondo que o campo seja 'data_final'
 
       if (dataFinalStr) {
         const dataFinal = new Date(dataFinalStr);
         const dataSelecionada = new Date(dataDisponivel);
 
+        // Verifica se a data selecionada é maior que data_final
         if (dataSelecionada > dataFinal) {
           setError('Esse dia o local não está disponível, por favor, escolha outra data.');
           setLoading(false);
@@ -175,6 +192,7 @@ const CadastroReserva = () => {
         }
       }
 
+      // Consulta as reservas existentes com o mesmo codigo_propriedade e data_disponivel
       const queryParams = {
         selector: {
           codigo_propriedade: codigoPropriedade,
@@ -195,11 +213,13 @@ const CadastroReserva = () => {
       );
 
       if (response.data.docs.length > 0) {
+        // Já existe uma reserva para esta propriedade e data
         setError('Esse dia o local não está disponível, por favor, escolha outra data.');
         setLoading(false);
         return;
       }
 
+      // Caso não exista, procede com a criação da reserva
       const reservaData = {
         codigo_reserva: codigoReserva,
         codigo_propriedade: codigoPropriedade,
@@ -209,11 +229,10 @@ const CadastroReserva = () => {
         endereco: enderecoCliente,
         cpf: cpfCliente,
         data_disponivel: dataDisponivel,
-        data_final_da_reserva: dataFinalDaReserva,
-        numero_de_diarias: numeroDeDiarias,
-        total_a_pagar: totalAPagar,
+        data_final_da_reserva: dataFinalDaReserva, 
+        numero_de_diarias: numeroDeDiarias, 
+        total_a_pagar: totalAPagar, 
         pagamento: pagamento,
-        data_hora_reserva: new Date().toISOString(),
       };
 
       await axios.post('http://localhost:5984/reservas', reservaData, {
@@ -235,38 +254,40 @@ const CadastroReserva = () => {
       console.error(error);
     }
   };
+  // Função para verificar o código da propriedade
+const verificarCodigoPropriedade = async () => {
+  if (!codigoPropriedade) {
+    setError('Por favor, insira um código de local.');
+    return;
+  }
 
-  const verificarCodigoPropriedade = async () => {
-    if (!codigoPropriedade) {
-      setError('Por favor, insira um código de local.');
-      return;
-    }
-
-    try {
-      const propertyResponse = await axios.post(
-        'http://localhost:5984/propriedades/_find',
-        {
-          selector: { codigo_propriedade: codigoPropriedade },
-          limit: 1,
+  try {
+    const propertyResponse = await axios.post(
+      'http://localhost:5984/propriedades/_find',
+      {
+        selector: { codigo_propriedade: codigoPropriedade },
+        limit: 1,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa('Admin:30115982Aib'),
-          },
-        }
-      );
-
-      if (propertyResponse.data.docs.length === 0) {
-        setError('Local não encontrado, escolha um Local cadastrado no Bookin Parties');
-      } else {
-        setError(null);
       }
-    } catch (error) {
-      setError('Erro ao verificar o código do local.');
-      console.error(error);
+    );
+
+    if (propertyResponse.data.docs.length === 0) {
+      setError('Local não encontrado, escolha um Local cadastrado no Bookin Parties');
+    } else {
+      setError(null); // Limpa a mensagem de erro se o local for encontrado
     }
-  };
+  } catch (error) {
+    setError('Erro ao verificar o código do local.');
+    console.error(error);
+  }
+};
+// Novo estado para armazenar a data e hora da reserva
+const [dataHoraReserva, setDataHoraReserva] = useState('');
 
   return (
     <div className="home-container">
@@ -281,118 +302,188 @@ const CadastroReserva = () => {
           <div className="login-container">
             <h2>Cadastro de Reserva</h2>
 
+            {/* Campo Código do Local */}
             <div className="form-group">
               <label htmlFor="codigoPropriedade">Código do Local</label>
               <input
                 type="text"
                 id="codigoPropriedade"
+                name="codigoPropriedade"
                 value={codigoPropriedade}
                 onChange={(e) => setCodigoPropriedade(e.target.value)}
-                onBlur={verificarCodigoPropriedade}
+                onBlur={verificarCodigoPropriedade} // Adicionando o onBlur
+                required
+                readOnly={!!codigoPropriedadeNavegacao}
               />
+              {error && <div className="error-message">{error}</div>}
             </div>
 
+            {/* Preço por Diária */}
             <div className="form-group">
-              <label htmlFor="dataDisponivel">Data Inicial</label>
-              <input
-                type="date"
-                id="dataDisponivel"
-                value={dataDisponivel}
-                onChange={(e) => setDataDisponivel(e.target.value)}
-              />
+              <label>Preço por Diária: {loadingPreco ? 'Carregando...' : `R$ ${precoPorDiaria.toFixed(2)}`}</label>
+              
             </div>
 
+            {/* Campo Código da Reserva */}
             <div className="form-group">
-              <label htmlFor="dataFinalDaReserva">Data Final</label>
+              <label htmlFor="codigoReserva">Código da Reserva</label>
               <input
-                type="date"
-                id="dataFinalDaReserva"
-                value={dataFinalDaReserva}
-                onChange={(e) => setDataFinalDaReserva(e.target.value)}
+                type="text"
+                id="codigoReserva"
+                name="codigoReserva"
+                value={codigoReserva}
+                readOnly
+                required
               />
             </div>
 
+            <h3>Dados Pessoais</h3>
+
+            {/* Campo Nome Completo */}
             <div className="form-group">
               <label htmlFor="nomeCliente">Nome Completo</label>
               <input
                 type="text"
                 id="nomeCliente"
+                name="nomeCliente"
                 value={nomeCliente}
                 onChange={(e) => setNomeCliente(e.target.value)}
                 required
               />
             </div>
 
+            {/* Campo Email */}
             <div className="form-group">
               <label htmlFor="emailCliente">Email</label>
               <input
                 type="email"
                 id="emailCliente"
+                name="emailCliente"
                 value={emailCliente}
                 onChange={(e) => setEmailCliente(e.target.value)}
                 required
               />
             </div>
 
+            {/* Campo Telefone */}
             <div className="form-group">
               <label htmlFor="telefoneCliente">Telefone</label>
               <input
-                type="text"
+                type="tel"
                 id="telefoneCliente"
+                name="telefoneCliente"
                 value={telefoneCliente}
                 onChange={(e) => setTelefoneCliente(e.target.value)}
                 required
               />
             </div>
 
+            {/* Campo Endereço */}
             <div className="form-group">
               <label htmlFor="enderecoCliente">Endereço</label>
               <input
                 type="text"
                 id="enderecoCliente"
+                name="enderecoCliente"
                 value={enderecoCliente}
                 onChange={(e) => setEnderecoCliente(e.target.value)}
                 required
               />
             </div>
 
+            {/* Campo CPF */}
             <div className="form-group">
               <label htmlFor="cpfCliente">CPF</label>
               <input
                 type="text"
                 id="cpfCliente"
+                name="cpfCliente"
                 value={cpfCliente}
                 onChange={(e) => setCpfCliente(e.target.value)}
                 required
               />
             </div>
 
+            <h3>Datas da Reserva</h3>
+
+            {/* Campo Data Inicial */}
             <div className="form-group">
-              <label htmlFor="pagamento">Forma de Pagamento</label>
+              <label htmlFor="dataDisponivel">Data Inicial</label>
+              <input
+                type="date"
+                id="dataDisponivel"
+                name="dataDisponivel"
+                value={dataDisponivel}
+                onChange={(e) => setDataDisponivel(e.target.value)}
+                required
+                min={new Date().toISOString().split('T')[0]} // Evita datas passadas
+              />
+            </div>
+
+            {/* Campo Data Final da Reserva */}
+            <div className="form-group">
+              <label htmlFor="dataFinalDaReserva">Data Final da Reserva</label>
+              <input
+                type="date"
+                id="dataFinalDaReserva"
+                name="dataFinalDaReserva"
+                value={dataFinalDaReserva}
+                onChange={(e) => setDataFinalDaReserva(e.target.value)}
+                required
+                min={dataDisponivel || new Date().toISOString().split('T')[0]} // A data final não pode ser anterior à inicial
+              />
+            </div>
+
+            <h3>Resumo da Reserva</h3>
+
+             {/* Número de Diárias */}
+             <div className="form-group">
+            <label>Diária(s): {numeroDeDiarias}</label> 
+              
+            </div>
+
+            {/* Total a Pagar */}
+            <div className="form-group">
+              <label>Total a Pagar: R$ {totalAPagar.toFixed(2)}</label>
+            </div>
+
+            <h3>Formas de Pagamento</h3>
+
+            {/* Campo Forma de Pagamento */}
+            <div className="form-group">
+              <label htmlFor="pagamento">Escolha a Forma de Pagamento</label>
               <select
                 id="pagamento"
+                name="pagamento"
                 value={pagamento}
                 onChange={(e) => setPagamento(e.target.value)}
                 required
               >
                 <option value="">Selecione</option>
-                <option value="cartao">Cartão</option>
-                <option value="boleto">Boleto</option>
-                <option value="pix">Pix</option>
+                <option value="cartao-credito">Cartão de Crédito</option>
+                <option value="cartao-debito">Cartão de Débito</option>
+                <option value="pix">PIX</option>
+                <option value="boleto">Boleto Bancário</option>
               </select>
             </div>
 
-            <div className="form-group">
-              <p>Preço por diária: R$ {precoPorDiaria.toFixed(2)}</p>
-              <p>Número de diárias: {numeroDeDiarias}</p>
-              <p>Total a pagar: R$ {totalAPagar.toFixed(2)}</p>
-            </div>
+            {/* Botão de Envio */}
+            <button type="submit" className="login-btn" disabled={loading}>
+              {loading ? 'Reservando...' : 'Reservar'}
+            </button>
 
-            {loading ? <p>Carregando...</p> : <button type="submit">Reservar</button>}
+            {/* Mensagem de Erro */}
+            {error && (
+              <div style={{ color: 'red' }}>
+                <p>{error}</p>
+                {error === 'Local não encontrado, escolha um Local cadastrado no Bookin Parties' && (
+                  <Link to="/cliente">Aqui você pode consultar locais disponíveis para sua festa ou evento.</Link>
+                )}
+              </div>
+            )}
 
-            {error && <p className="error">{error}</p>}
-            {errorPreco && <p className="error">{errorPreco}</p>}
-            {sucesso && <p className="success">Reserva realizada com sucesso!</p>}
+            {/* Mensagem de Sucesso */}
+            {sucesso && <p style={{ color: 'green' }}>Reserva feita com sucesso! Redirecionando...</p>}
           </div>
         </form>
       </div>

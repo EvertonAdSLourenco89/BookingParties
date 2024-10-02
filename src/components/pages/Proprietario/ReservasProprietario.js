@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
 import axios from 'axios';
-import '../../ListaPropriedades.css'; // Importe o arquivo CSS
+import '../../../../src/ListaPropriedades.css'; // Importe o arquivo CSS
 
 const ListaReservas = () => {
   const [codigoPropriedade, setCodigoPropriedade] = useState(''); // Estado para o código da propriedade
@@ -76,12 +76,12 @@ const ListaReservas = () => {
   };
 
   return (
-    <div className="home-containerprop">
+    <div className="home-container">
       <Header />
       <div>
         <h1>Buscar Reservas por Código da Propriedade</h1>
         <div className="form-group">
-          <label htmlFor="codigoPropriedade">Digite o código da propriedade:</label>
+          <label htmlFor="codigoPropriedade">Digite o código da propriedade</label>
           <input
             type="text"
             id="codigoPropriedade"
@@ -106,6 +106,7 @@ const ListaReservas = () => {
                   <h2>Código da reserva: {reserva.codigo_reserva}</h2>
                 </div>
                 <div className="card-body">
+               
                   <p><strong>Código da Propriedade:</strong> {reserva.codigo_propriedade}</p>
                   <p><strong>Nome Completo:</strong> {reserva.nome_completo}</p>
                   <p><strong>Email:</strong> {reserva.email}</p>
@@ -117,17 +118,20 @@ const ListaReservas = () => {
                   <p><strong>Valor Total:</strong> R$ {reserva.total_a_pagar},00</p>
                   <p><strong>Forma de Pagamento:</strong> {reserva.forma_pagamento}</p>
                 </div>
-                <div className="button-container">
+                <div >
                   <button type="button" className="cancel-btn"
                     onClick={() => handleCancelar(reserva._id, reserva._rev)}
                   >Cancelar</button>
-                </div><br></br><br></br><br></br><br></br>
+                </div><br/>
+                
               </div>
             ))
           ) : (
             <p>Nenhuma reserva encontrada.</p>
           )}
+          
         </div>
+        
       </div>
       <Footer />
     </div>

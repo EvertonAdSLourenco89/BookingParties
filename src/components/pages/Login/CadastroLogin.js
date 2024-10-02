@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
-import authService from '../../service/authService'; // Serviço de autenticação
+import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
+import authService from '../../../service/authService'; // Serviço de autenticação
 
 const CadastroDeLogin = () => {
   const [nome, setNome] = useState('');
@@ -19,14 +19,22 @@ const CadastroDeLogin = () => {
     event.preventDefault();
     setLoading(true);
     let response;
-
+  
+    const userData = {
+      nome: nome,
+      email: email,
+      login: login,
+      senha: senha,
+      role: role
+    };
+  
     // Verifica o papel escolhido e chama a função de cadastro correspondente
     if (role === 'proprietario') {
-      response = authService.register(login, senha); // Cadastro de proprietário
+      response = authService.register(userData); // Cadastro de proprietário
     } else {
-      response = authService.register2(login, senha); // Cadastro de cliente
+      response = authService.register2(userData); // Cadastro de cliente
     }
-
+  
     if (response.error) {
       setError(response.error);  // Exibe mensagem de erro se o usuário já existir
       setLoading(false);
@@ -35,6 +43,7 @@ const CadastroDeLogin = () => {
       navigate('/');  // Redireciona para a página inicial ou outra após o cadastro
     }
   };
+  
 
   return (
     <div className="home-container">

@@ -17,7 +17,7 @@
 }
 
 .home-header {
-  background-color: #2e0fb5;
+  background-color: #b55a0f;
   color: white;
   padding: 20px;
   display: flex; /* Torna o header um contêiner flexível */
@@ -27,7 +27,7 @@
 
 
 .home1-header {
-  background-color: #2e0fb5;
+  background-color: #b55a0f;
   color: white;
   padding: 20px;
   text-align: center;
@@ -42,7 +42,7 @@
 }
 
 .login-btn:hover {
-  background-color: #2e0fb5;
+  background-color: #b55a0f;
 }
 
 .user-info {
@@ -69,7 +69,7 @@
 
 .home-footer {
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 0.2px;
   text-align: center;
   color: #777;
   font-size: 14px;
@@ -79,7 +79,7 @@
   border-top: 1px solid #ccc;
 }
 .nav-bar {
-  background-color: #2e0fb5;
+  background-color: #b55a0f;
   padding: 10px 20px;
 }
 
@@ -145,7 +145,7 @@ h2 {
 }
 
 .login-btn {
-  background-color: #2e0fb5;
+  background-color: #510fb5;
   color: white;
   padding: 10px;
   font-size: 16px;
@@ -169,7 +169,7 @@ h2 {
 }
 
 .login-btn:hover {
-  background-color: #2e0fb5;
+  background-color: #b55a0f;
 }
 
 .error-message {
@@ -252,10 +252,13 @@ form.login-form {
 }
 
 .button-container {
+  margin-left: 15px;
   display: flex;          /* Usando Flexbox para alinhar os botões */
   gap: 10px;            /* Espaço entre os botões */
-  margin-top: 10px;     /* Margem superior para separar dos elementos acima */
+  margin-top: 50px;     /* Margem superior para separar dos elementos acima */
 }
+
+
 
 
 
